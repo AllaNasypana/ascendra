@@ -1,0 +1,257 @@
+
+:root {
+  color-scheme: light;
+
+  /* ── Base ── */
+  --background: 0 0% 98%;
+  --foreground: 0 0% 9%;
+  --card: 0 0% 100%;
+  --card-foreground: 0 0% 9%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 0 0% 9%;
+  --muted: 0 0% 96%;
+  --muted-foreground: 0 0% 38%;
+  --border: 0 0% 88%;
+  --input: 0 0% 88%;
+  --ring: 212 100% 45%;
+  --radius: 0.625rem;
+
+  /* ── Semantic ── */
+  --primary: 212 100% 45%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 0 0% 94%;
+  --secondary-foreground: 0 0% 9%;
+  --accent: 0 0% 94%;
+  --accent-foreground: 0 0% 9%;
+  --destructive: 0 72% 46%;
+  --destructive-foreground: 0 0% 100%;
+  --success: 152 69% 28%;
+  --success-foreground: 0 0% 100%;
+  --warning: 32 95% 38%;
+  --warning-foreground: 0 0% 100%;
+
+  /* ── Developer shell ── */
+  --dev-accent: 172 66% 32%;
+  --dev-accent-foreground: 0 0% 100%;
+  --dev-accent-subtle: 172 45% 94%;
+  --dev-sidebar-bg: 0 0% 100%;
+  --dev-sidebar-text: 0 0% 9%;
+  --dev-sidebar-muted: 0 0% 42%;
+  --dev-sidebar-border: 0 0% 90%;
+  --dev-main-bg: 0 0% 98%;
+
+  /* ── Admin shell ── */
+  --admin-accent: 262 70% 50%;
+  --admin-accent-foreground: 0 0% 100%;
+  --admin-accent-subtle: 262 45% 94%;
+  --admin-sidebar-bg: 260 25% 99%;
+  --admin-sidebar-text: 260 10% 12%;
+  --admin-sidebar-muted: 260 8% 40%;
+  --admin-sidebar-border: 260 12% 88%;
+  --admin-main-bg: 260 20% 97%;
+  --admin-main-text: 260 10% 12%;
+
+  /* ── Charts ── */
+  --chart-cpu: 262 70% 50%;
+  --chart-memory: 158 64% 36%;
+  --chart-warning: 32 95% 44%;
+  --chart-idle: 220 9% 46%;
+
+  /* ── VM status ── */
+  --status-running-bg: 152 60% 92%;
+  --status-running-text: 152 69% 22%;
+  --status-running-border: 152 40% 78%;
+  --status-stopped-bg: 220 14% 93%;
+  --status-stopped-text: 220 9% 32%;
+  --status-stopped-border: 220 13% 82%;
+  --status-starting-bg: 45 93% 90%;
+  --status-starting-text: 32 95% 28%;
+  --status-starting-border: 45 80% 72%;
+  --status-stopping-bg: 24 90% 90%;
+  --status-stopping-text: 20 90% 32%;
+  --status-stopping-border: 24 70% 72%;
+  --status-error-bg: 0 86% 94%;
+  --status-error-text: 0 72% 38%;
+  --status-error-border: 0 60% 80%;
+
+  /* ── Alerts ── */
+  --alert-warning-bg: 45 93% 94%;
+  --alert-warning-text: 32 95% 28%;
+  --alert-warning-border: 45 80% 72%;
+  --alert-idle-bg: 45 60% 95%;
+  --alert-idle-text: 32 80% 30%;
+  --alert-idle-border: 45 50% 80%;
+
+  /* ── Data table ── */
+  --table-header-bg: 0 0% 96%;
+  --table-header-text: 0 0% 38%;
+  --table-row-hover: 0 0% 97%;
+  --table-row-border: 0 0% 90%;
+  --table-cell-text: 0 0% 15%;
+}
+
+.dark {
+  color-scheme: dark;
+
+  --background: 0 0% 4%;
+  --foreground: 0 0% 95%;
+  --card: 0 0% 7%;
+  --card-foreground: 0 0% 95%;
+  --popover: 0 0% 7%;
+  --popover-foreground: 0 0% 95%;
+  --muted: 0 0% 12%;
+  --muted-foreground: 0 0% 72%;
+  --border: 0 0% 18%;
+  --input: 0 0% 18%;
+  --ring: 212 100% 65%;
+
+  --primary: 212 100% 65%;
+  --primary-foreground: 0 0% 4%;
+  --secondary: 0 0% 14%;
+  --secondary-foreground: 0 0% 95%;
+  --accent: 0 0% 14%;
+  --accent-foreground: 0 0% 95%;
+  --destructive: 0 72% 55%;
+  --destructive-foreground: 0 0% 100%;
+  --success: 152 55% 48%;
+  --success-foreground: 0 0% 4%;
+  --warning: 38 92% 55%;
+  --warning-foreground: 0 0% 4%;
+
+  --dev-accent: 172 55% 48%;
+  --dev-accent-foreground: 0 0% 4%;
+  --dev-accent-subtle: 172 30% 14%;
+  --dev-sidebar-bg: 0 0% 6%;
+  --dev-sidebar-text: 0 0% 95%;
+  --dev-sidebar-muted: 0 0% 68%;
+  --dev-sidebar-border: 0 0% 16%;
+  --dev-main-bg: 0 0% 4%;
+
+  --admin-accent: 262 75% 68%;
+  --admin-accent-foreground: 0 0% 4%;
+  --admin-accent-subtle: 262 30% 16%;
+  --admin-sidebar-bg: 240 6% 6%;
+  --admin-sidebar-text: 0 0% 96%;
+  --admin-sidebar-muted: 240 5% 72%;
+  --admin-sidebar-border: 240 4% 18%;
+  --admin-main-bg: 0 0% 4%;
+  --admin-main-text: 0 0% 95%;
+
+  --chart-cpu: 262 75% 68%;
+  --chart-memory: 158 55% 50%;
+  --chart-warning: 38 92% 55%;
+  --chart-idle: 220 9% 55%;
+
+  --status-running-bg: 152 40% 14%;
+  --status-running-text: 152 55% 68%;
+  --status-running-border: 152 30% 26%;
+  --status-stopped-bg: 220 10% 16%;
+  --status-stopped-text: 220 9% 72%;
+  --status-stopped-border: 220 8% 26%;
+  --status-starting-bg: 45 50% 14%;
+  --status-starting-text: 45 90% 65%;
+  --status-starting-border: 45 40% 26%;
+  --status-stopping-bg: 24 50% 14%;
+  --status-stopping-text: 24 85% 65%;
+  --status-stopping-border: 24 40% 26%;
+  --status-error-bg: 0 50% 14%;
+  --status-error-text: 0 75% 68%;
+  --status-error-border: 0 40% 26%;
+
+  --alert-warning-bg: 45 40% 12%;
+  --alert-warning-text: 45 90% 72%;
+  --alert-warning-border: 45 35% 24%;
+  --alert-idle-bg: 45 35% 12%;
+  --alert-idle-text: 45 80% 70%;
+  --alert-idle-border: 45 30% 24%;
+
+  --table-header-bg: 0 0% 10%;
+  --table-header-text: 0 0% 72%;
+  --table-row-hover: 0 0% 8%;
+  --table-row-border: 0 0% 16%;
+  --table-cell-text: 0 0% 88%;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not(.light) {
+    color-scheme: dark;
+
+    --background: 0 0% 4%;
+    --foreground: 0 0% 95%;
+    --card: 0 0% 7%;
+    --card-foreground: 0 0% 95%;
+    --popover: 0 0% 7%;
+    --popover-foreground: 0 0% 95%;
+    --muted: 0 0% 12%;
+    --muted-foreground: 0 0% 72%;
+    --border: 0 0% 18%;
+    --input: 0 0% 18%;
+    --ring: 212 100% 65%;
+
+    --primary: 212 100% 65%;
+    --primary-foreground: 0 0% 4%;
+    --secondary: 0 0% 14%;
+    --secondary-foreground: 0 0% 95%;
+    --accent: 0 0% 14%;
+    --accent-foreground: 0 0% 95%;
+    --destructive: 0 72% 55%;
+    --destructive-foreground: 0 0% 100%;
+    --success: 152 55% 48%;
+    --success-foreground: 0 0% 4%;
+    --warning: 38 92% 55%;
+    --warning-foreground: 0 0% 4%;
+
+    --dev-accent: 172 55% 48%;
+    --dev-accent-foreground: 0 0% 4%;
+    --dev-accent-subtle: 172 30% 14%;
+    --dev-sidebar-bg: 0 0% 6%;
+    --dev-sidebar-text: 0 0% 95%;
+    --dev-sidebar-muted: 0 0% 68%;
+    --dev-sidebar-border: 0 0% 16%;
+    --dev-main-bg: 0 0% 4%;
+
+    --admin-accent: 262 75% 68%;
+    --admin-accent-foreground: 0 0% 4%;
+    --admin-accent-subtle: 262 30% 16%;
+    --admin-sidebar-bg: 240 6% 6%;
+    --admin-sidebar-text: 0 0% 96%;
+    --admin-sidebar-muted: 240 5% 72%;
+    --admin-sidebar-border: 240 4% 18%;
+    --admin-main-bg: 0 0% 4%;
+    --admin-main-text: 0 0% 95%;
+
+    --chart-cpu: 262 75% 68%;
+    --chart-memory: 158 55% 50%;
+    --chart-warning: 38 92% 55%;
+    --chart-idle: 220 9% 55%;
+
+    --status-running-bg: 152 40% 14%;
+    --status-running-text: 152 55% 68%;
+    --status-running-border: 152 30% 26%;
+    --status-stopped-bg: 220 10% 16%;
+    --status-stopped-text: 220 9% 72%;
+    --status-stopped-border: 220 8% 26%;
+    --status-starting-bg: 45 50% 14%;
+    --status-starting-text: 45 90% 65%;
+    --status-starting-border: 45 40% 26%;
+    --status-stopping-bg: 24 50% 14%;
+    --status-stopping-text: 24 85% 65%;
+    --status-stopping-border: 24 40% 26%;
+    --status-error-bg: 0 50% 14%;
+    --status-error-text: 0 75% 68%;
+    --status-error-border: 0 40% 26%;
+
+    --alert-warning-bg: 45 40% 12%;
+    --alert-warning-text: 45 90% 72%;
+    --alert-warning-border: 45 35% 24%;
+    --alert-idle-bg: 45 35% 12%;
+    --alert-idle-text: 45 80% 70%;
+    --alert-idle-border: 45 30% 24%;
+
+    --table-header-bg: 0 0% 10%;
+    --table-header-text: 0 0% 72%;
+    --table-row-hover: 0 0% 8%;
+    --table-row-border: 0 0% 16%;
+    --table-cell-text: 0 0% 88%;
+  }
+}
