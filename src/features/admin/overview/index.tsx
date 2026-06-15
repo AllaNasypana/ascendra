@@ -1,24 +1,17 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
 import type { FC } from "react";
-import { api } from "@/lib/api-client";
-import { UtilizationChart, VmDistributionChart } from "@/components/charts";
+
+import { UtilizationChart } from "@/components/charts";
 import { MetricCard } from "@/components/metrics";
 import { Card, CardContent, CardHeader, CardTitle, Skeleton } from "@/components/ui";
-import { formatCurrency, formatPercent, isIdleVm } from "@/utils";
-import { EVMStatus } from "@/types";
+import { formatCurrency, formatPercent } from "@/utils";
+
+import { useOverview } from "./use-overview";
 
 export const FleetOverview: FC = () => {
-  const { data, isLoading, isError, refetch } = useQuery({
-    queryKey: ["fleet"],
-    queryFn: () => api.fleet.get("real-time"),
-  });
-
-  const { data: vmsData } = useQuery({
-    queryKey: ["vms"],
-    queryFn: () => api.vms.list(),
-  });
+ 
+  const { fleet, chartData, idleCount, isLoading, isError, refetch } = useOverview();
 
   if (isLoading) {
     return (
@@ -33,7 +26,7 @@ export const FleetOverview: FC = () => {
     );
   }
 
-  if (isError || !data) {
+  if (isError || !fleet) {
     return (
       <div className="state-panel">
         <p className="text-muted-foreground">Failed to load fleet data.</p>
@@ -44,28 +37,7 @@ export const FleetOverview: FC = () => {
     );
   }
 
-  const { fleet } = data;
-
-  const allVms = vmsData?.vms ?? [];
-
-  const chartData = fleet.utilizationTrend.map((p) => ({
-    label: new Date(p.timestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-    cpu: Math.round(p.cpuPercent),
-    memory: Math.round(p.memoryPercent),
-    runningVms: p.runningVms,
-  }));
-
-  const distributionData = allVms
-    .filter((v) => v.status === EVMStatus.RUNNING)
-    .map((v) => ({
-      name: v.name,
-      cpu: v.cpuUsagePercent,
-      isIdle: isIdleVm(v.lastActiveAt, v.cpuUsagePercent),
-    }));
-
-  const idleCount = allVms.filter(
-    (v) => v.status === EVMStatus.RUNNING && isIdleVm(v.lastActiveAt, v.cpuUsagePercent)
-  ).length;
+ 
 
   return (
     <div className="space-y-6">
@@ -106,29 +78,13 @@ export const FleetOverview: FC = () => {
         </div>
       )}
 
-      <div className="grid gap-6 lg:grid-cols-2">
+      <div className="flex flex-col gap-4">
         <Card>
           <CardHeader>
             <CardTitle>Fleet Utilization (24h)</CardTitle>
           </CardHeader>
           <CardContent>
-            <UtilizationChart data={chartData} />
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>CPU by VM</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {distributionData.length > 0 ? (
-              <VmDistributionChart data={distributionData} />
-            ) : (
-              <p className="py-12 text-center text-sm text-muted-foreground">No running VMs</p>
-            )}
-            <p className="mt-2 text-xs text-muted-foreground">
-              Muted bars indicate idle VMs (&lt;5% CPU, inactive &gt;30m)
-            </p>
+            <UtilizationChart data={chartData ?? []} />
           </CardContent>
         </Card>
       </div>

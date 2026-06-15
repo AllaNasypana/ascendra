@@ -1,5 +1,5 @@
 
-import { TemplatesManager } from "@/features/admin/templates-manager";
+import { TemplatesManager } from "@/features/admin/templates";
 
 export default function TemplatesPage() {
   return (

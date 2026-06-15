@@ -58,7 +58,7 @@ export const UtilizationChart: FC<UtilizationChartProps> = ({
       <Line
         type="monotone"
         dataKey="cpu"
-        name="CPU"
+        name="CPU %"
         stroke="hsl(var(--chart-cpu))"
         strokeWidth={2}
         dot={false}
@@ -66,7 +66,7 @@ export const UtilizationChart: FC<UtilizationChartProps> = ({
       <Line
         type="monotone"
         dataKey="memory"
-        name="Memory"
+        name="Memory %"
         stroke="hsl(var(--chart-memory))"
         strokeWidth={2}
         dot={false}

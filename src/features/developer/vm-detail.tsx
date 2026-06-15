@@ -27,9 +27,10 @@ import { useVm } from "@/features/developer/use-vm";
 
 interface VmDetailProps {
   vmId: string;
+  isAdmin?: boolean;
 }
 
-export const VmDetail: FC<VmDetailProps> = ({ vmId }) => {
+export const VmDetail: FC<VmDetailProps> = ({ vmId, isAdmin = false }) => {
   const actions = useVmActions(vmId);
 
   const { vm, template, chartData, isTransitioning, metricsLoading, vmLoading } = useVm(vmId);
@@ -51,7 +52,7 @@ export const VmDetail: FC<VmDetailProps> = ({ vmId }) => {
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-4">
-        <Link href="/machines" className="text-muted-foreground hover:text-foreground">
+        <Link href="./" className="text-muted-foreground hover:text-foreground">
           <FiArrowLeft className="h-5 w-5" />
         </Link>
         <div className="flex-1">
@@ -63,7 +64,10 @@ export const VmDetail: FC<VmDetailProps> = ({ vmId }) => {
             {template?.name} · {vm.region}
           </p>
         </div>
-        <div className="flex gap-2">
+
+        
+        {!isAdmin && (
+          <div className="flex gap-2">
           {vm.status === EVMStatus.RUNNING && (
             <>
               <Button asChild>
@@ -95,6 +99,7 @@ export const VmDetail: FC<VmDetailProps> = ({ vmId }) => {
             </span>
           )}
         </div>
+        )}
       </div>
 
       <div className="grid gap-4 md:grid-cols-4">

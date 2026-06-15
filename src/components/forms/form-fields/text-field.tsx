@@ -44,6 +44,14 @@ export function TextField<T extends FieldValues>({
           {...field}
           {...rest}
           value={field.value ?? ''}
+          onChange={(event) => {
+            const value =
+              type === "number"
+                ? event.target.valueAsNumber
+                : event.target.value;
+
+            field.onChange(Number.isNaN(value) ? undefined : value);
+          }}
         />
       )}
     />
