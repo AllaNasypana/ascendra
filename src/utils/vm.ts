@@ -1,7 +1,7 @@
-import type { VM, MetricPoint, FleetUtilization, VMStatus } from "@/types";
-import { EVMStatus } from "@/types";
-import { getStore } from "@/mocks/store";
-import { simulateDelay } from "@/utils/general";
+import type { VM, MetricPoint, FleetUtilization, VMStatus } from '@/types';
+import { EVMStatus } from '@/types';
+import { getStore } from '@/mocks/store';
+import { simulateDelay } from '@/utils/general';
 
 export const getVmById = (id: string): VM | undefined => getStore().vmsMap.get(id);
 
@@ -31,7 +31,7 @@ export const transitionVm = async (
   fromStatuses: VMStatus[],
   intermediate: VMStatus,
   final: VMStatus,
-  delayMs: number
+  delayMs: number,
 ): Promise<{ vm: VM } | { error: string; status: number } | null> => {
   const vm = getVmById(id);
   if (!vm) return null;
@@ -60,7 +60,7 @@ export const transitionVm = async (
 };
 
 export const stopVm = async (
-  id: string
+  id: string,
 ): Promise<{ vm: VM } | { error: string; status: number } | null> => {
   const vm = getVmById(id);
   if (!vm) return null;
@@ -81,7 +81,7 @@ export const stopVm = async (
 };
 
 export const restartVm = async (
-  id: string
+  id: string,
 ): Promise<{ vm: VM } | { error: string; status: number } | null> => {
   const vm = getVmById(id);
   if (!vm) return null;
@@ -104,30 +104,25 @@ export const restartVm = async (
 };
 
 export const computeFleetUtilization = (
-  period: FleetUtilization["period"] = "real-time"
+  period: FleetUtilization['period'] = 'real-time',
 ): FleetUtilization => {
   const { users, vms } = getStore();
   const running = vms.filter((v) => v.status === EVMStatus.RUNNING);
   const stopped = vms.filter((v) => v.status === EVMStatus.STOPPED);
-  const engineers = users.filter((u) => u.role === "engineer");
+  const engineers = users.filter((u) => u.role === 'engineer');
 
   const avgCpu =
-    running.length > 0
-      ? running.reduce((s, v) => s + v.cpuUsagePercent, 0) / running.length
-      : 0;
+    running.length > 0 ? running.reduce((s, v) => s + v.cpuUsagePercent, 0) / running.length : 0;
   const avgMem =
-    running.length > 0
-      ? running.reduce((s, v) => s + v.memoryUsagePercent, 0) / running.length
-      : 0;
+    running.length > 0 ? running.reduce((s, v) => s + v.memoryUsagePercent, 0) / running.length : 0;
   const peakCpu = running.length > 0 ? Math.max(...running.map((v) => v.cpuUsagePercent)) : 0;
-  const peakMem =
-    running.length > 0 ? Math.max(...running.map((v) => v.memoryUsagePercent)) : 0;
+  const peakMem = running.length > 0 ? Math.max(...running.map((v) => v.memoryUsagePercent)) : 0;
   const totalHourlyCost = running.reduce((s, v) => s + v.hourlyCost, 0);
 
   const now = Date.now();
   const hoursAgo = (h: number) => new Date(now - h * 3600000).toISOString();
 
-  const utilizationTrend: FleetUtilization["utilizationTrend"] = [];
+  const utilizationTrend: FleetUtilization['utilizationTrend'] = [];
   for (let i = 23; i >= 0; i--) {
     const cpuVariance = Math.sin(i * 0.3) * 12 + 35;
     const memVariance = Math.sin(i * 0.4) * 10 + 45;

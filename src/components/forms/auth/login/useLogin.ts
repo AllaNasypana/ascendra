@@ -2,8 +2,10 @@
 
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useRouter } from 'next/navigation';
 import { loginSchema, type LoginSchema } from '@/lib/schemas';
 import { useAuth } from '@/hooks';
+import { getRoleRedirectPath } from '@/utils';
 
 const DEFAULT_VALUES = {
   email: '',
@@ -11,6 +13,7 @@ const DEFAULT_VALUES = {
 };
 
 export const useLoginForm = () => {
+  const router = useRouter();
   const { login, isLoginPending } = useAuth();
 
   const {
@@ -23,9 +26,15 @@ export const useLoginForm = () => {
     defaultValues: DEFAULT_VALUES,
   });
 
-  const onSubmit = (data: LoginSchema) => {
-    if (!isValid || isSubmitting || isLoginPending) return;
-    login(data.email, data.password);
+  const onSubmit = async (data: LoginSchema) => {
+    if (isSubmitting || isLoginPending) return;
+
+    const user = await login(data.email, data.password);
+
+    if (!user) return;
+
+    router.replace(getRoleRedirectPath(user.role));
+    router.refresh();
   };
 
   return {

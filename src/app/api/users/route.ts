@@ -1,5 +1,5 @@
-import { NextResponse } from "next/server";
-import { listUsers, simulateDelay, toPublicUser } from "@/utils";
+import { NextResponse } from 'next/server';
+import { listUsers, simulateDelay, toPublicUser } from '@/utils';
 
 export const GET = async (): Promise<NextResponse> => {
   await simulateDelay(200);

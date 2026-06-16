@@ -13,10 +13,10 @@ Open [http://localhost:3000](http://localhost:3000)
 
 ### Demo Accounts
 
-| Role | Email | Password |
-|------|-------|----------|
-| Developer | `alex.chen@ascendra.io` | `password` |
-| Admin | `taylor.admin@ascendra.io` | `password` |
+| Role      | Email                      | Password   |
+| --------- | -------------------------- | ---------- |
+| Developer | `alex.chen@ascendra.io`    | `password` |
+| Admin     | `taylor.admin@ascendra.io` | `password` |
 
 ## Stack
 
@@ -52,21 +52,21 @@ src/
 
 The core tension is **two personas with opposite mental models**:
 
-- **Developers** think in terms of *my workspace* — start it, connect to IDE, check if it's healthy.
-- **Admins** think in terms of *the fleet* — cost, utilization, idle waste, template governance.
+- **Developers** think in terms of _my workspace_ — start it, connect to IDE, check if it's healthy.
+- **Admins** think in terms of _the fleet_ — cost, utilization, idle waste, template governance.
 
 These shouldn't share the same navigation or visual language. I split them into distinct experiences connected by a role-aware switcher (admins can peek at the developer view).
 
 ### Key Decisions
 
-| Decision | Rationale |
-|----------|-----------|
-| **Separate shells** — light/green developer UI vs dark/indigo admin console | Instant visual context for which "mode" you're in |
-| **Card grid for developer VMs, data table for admin inventory** | Developers have few machines (1–3); cards emphasize actions. Admins scan dozens — tables with inline metrics win |
-| **Idle VM highlighting** | Directly addresses admin need for efficiency; surfaced in inventory + fleet alert banner |
-| **Polling during transitions** | Start/stop/restart are async; refetch every 2s while `starting`/`stopping` gives realistic feedback without WebSocket complexity |
-| **"Open in IDE" as external link stub** | Matches brief's vscode-server pattern; clearly actionable without building an embedded IDE |
-| **Mock API with simulated delays** | Forces real loading/error/empty states; mutations feel async like production |
+| Decision                                                                    | Rationale                                                                                                                        |
+| --------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| **Separate shells** — light/green developer UI vs dark/indigo admin console | Instant visual context for which "mode" you're in                                                                                |
+| **Card grid for developer VMs, data table for admin inventory**             | Developers have few machines (1–3); cards emphasize actions. Admins scan dozens — tables with inline metrics win                 |
+| **Idle VM highlighting**                                                    | Directly addresses admin need for efficiency; surfaced in inventory + fleet alert banner                                         |
+| **Polling during transitions**                                              | Start/stop/restart are async; refetch every 2s while `starting`/`stopping` gives realistic feedback without WebSocket complexity |
+| **"Open in IDE" as external link stub**                                     | Matches brief's vscode-server pattern; clearly actionable without building an embedded IDE                                       |
+| **Mock API with simulated delays**                                          | Forces real loading/error/empty states; mutations feel async like production                                                     |
 
 ### Information Architecture
 
@@ -104,18 +104,21 @@ Admins with dual access can switch between Developer View and Admin Console via 
 ## Features Implemented
 
 ### Developer
+
 - My Machines list with status, template, resource usage
 - Start / Stop / Restart with transition states
 - Open in IDE (external link)
 - VM detail: 24h CPU/memory charts, specs, uptime, metadata
 
 ### Admin
+
 - Fleet overview: VM counts, avg/peak utilization, cost metrics
 - Fleet utilization charts (24h trend + per-VM CPU distribution)
 - VM inventory: searchable, filterable, idle highlighting
 - Templates: list, create, edit (React Hook Form + Zod)
 
 ### Cross-cutting
+
 - Loading skeletons, empty states, error retry
 - Toast notifications for mutations
 - Typed API client + TanStack Query
@@ -123,15 +126,15 @@ Admins with dual access can switch between Developer View and Admin Console via 
 
 ## API Endpoints
 
-| Method | Path | Description |
-|--------|------|-------------|
-| POST | `/api/auth/login` | Authenticate |
-| POST | `/api/auth/register` | Register engineer |
-| GET | `/api/auth/me?userId=` | Get current user |
-| GET | `/api/vms?ownerId=` | List VMs |
-| GET | `/api/vms/:id` | Get VM |
-| GET | `/api/vms/:id/metrics` | VM usage history |
-| POST | `/api/vms/:id/start\|stop\|restart` | Lifecycle actions |
-| GET/POST | `/api/templates` | List/create templates |
-| PATCH | `/api/templates/:id` | Update template |
-| GET | `/api/fleet` | Fleet utilization snapshot |
+| Method   | Path                                | Description                |
+| -------- | ----------------------------------- | -------------------------- |
+| POST     | `/api/auth/login`                   | Authenticate               |
+| POST     | `/api/auth/register`                | Register engineer          |
+| GET      | `/api/auth/me?userId=`              | Get current user           |
+| GET      | `/api/vms?ownerId=`                 | List VMs                   |
+| GET      | `/api/vms/:id`                      | Get VM                     |
+| GET      | `/api/vms/:id/metrics`              | VM usage history           |
+| POST     | `/api/vms/:id/start\|stop\|restart` | Lifecycle actions          |
+| GET/POST | `/api/templates`                    | List/create templates      |
+| PATCH    | `/api/templates/:id`                | Update template            |
+| GET      | `/api/fleet`                        | Fleet utilization snapshot |

@@ -31,10 +31,7 @@ export const PasswordInput: FC<PasswordInputProps> = ({
   }
 
   return (
-    <div
-      ref={rootRef}
-      className={cn('password-input', isError && 'form-error', className)}
-    >
+    <div ref={rootRef} className={cn('password-input', isError && 'form-error', className)}>
       <input
         disabled={disabled}
         type={isHidden ? 'password' : 'text'}

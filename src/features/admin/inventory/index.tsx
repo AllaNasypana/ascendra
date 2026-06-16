@@ -1,9 +1,8 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import type { FC } from "react";
-import { FiSearch } from "react-icons/fi";
-
+import Link from 'next/link';
+import type { FC } from 'react';
+import { FiSearch } from 'react-icons/fi';
 import {
   Badge,
   Button,
@@ -14,19 +13,14 @@ import {
   SelectTrigger,
   SelectValue,
   Skeleton,
-} from "@/components/ui";
-import { ROUTES } from "@/constants";
-import type { VMStatus } from "@/types";
-import { EVMStatus } from "@/types";
-import { cn, formatCurrency, isIdleVm } from "@/utils";
-
-import {
-  useInventory,
-  
-} from "./use-inventory";
-
-import { SortableHeader } from "./sortable-header";
-import { MetricCell } from "./metric-cell";
+} from '@/components/ui';
+import { ROUTES } from '@/constants';
+import type { VMStatus } from '@/types';
+import { EVMStatus } from '@/types';
+import { cn, formatCurrency, isIdleVm } from '@/utils';
+import { useInventory } from './use-inventory';
+import { SortableHeader } from './sortable-header';
+import { MetricCell } from './metric-cell';
 
 export const VmInventory: FC = () => {
   const {
@@ -91,7 +85,7 @@ export const VmInventory: FC = () => {
 
         <Select
           value={statusFilter}
-          onValueChange={(value) => setStatusFilter(value as VMStatus | "all")}
+          onValueChange={(value) => setStatusFilter(value as VMStatus | 'all')}
         >
           <SelectTrigger className="w-full sm:w-40" aria-label="Filter by status">
             <SelectValue placeholder="Status" />
@@ -170,16 +164,12 @@ export const VmInventory: FC = () => {
             ) : (
               inventoryItems.map(({ vm, owner, template }) => {
                 const isIdle =
-                  vm.status === EVMStatus.RUNNING &&
-                  isIdleVm(vm.lastActiveAt, vm.cpuUsagePercent);
+                  vm.status === EVMStatus.RUNNING && isIdleVm(vm.lastActiveAt, vm.cpuUsagePercent);
 
                 return (
-                  <tr key={vm.id} className={cn(isIdle && "alert-idle-row")}>
+                  <tr key={vm.id} className={cn(isIdle && 'alert-idle-row')}>
                     <td>
-                      <Link
-                        href={`./${ROUTES.inventory}/${vm.id}`}
-                        className="flex w-full py-2"
-                      >
+                      <Link href={`./${ROUTES.inventory}/${vm.id}`} className="flex w-full py-2">
                         <div className="flex items-center gap-2">
                           <span className="font-medium">{vm.name}</span>
                           {isIdle && <span className="idle-tag">Idle</span>}
@@ -206,13 +196,9 @@ export const VmInventory: FC = () => {
                       />
                     </td>
 
-                    <td className="tabular-nums">
-                      {Math.round(vm.diskUsagePercent)}%
-                    </td>
+                    <td className="tabular-nums">{Math.round(vm.diskUsagePercent)}%</td>
 
-                    <td className="tabular-nums">
-                      {formatCurrency(vm.hourlyCost)}
-                    </td>
+                    <td className="tabular-nums">{formatCurrency(vm.hourlyCost)}</td>
                   </tr>
                 );
               })

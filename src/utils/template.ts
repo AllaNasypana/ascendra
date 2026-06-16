@@ -1,5 +1,5 @@
-import type { VMTemplate } from "@/types";
-import { getStore } from "@/mocks/store";
+import type { VMTemplate } from '@/types';
+import { getStore } from '@/mocks/store';
 
 export const getTemplateById = (id: string): VMTemplate | undefined =>
   getStore().templatesMap.get(id);
@@ -15,7 +15,7 @@ export const createTemplate = (template: VMTemplate): VMTemplate => {
 
 export const updateTemplate = (
   id: string,
-  patch: Partial<Omit<VMTemplate, "id">>
+  patch: Partial<Omit<VMTemplate, 'id'>>,
 ): VMTemplate | undefined => {
   const store = getStore();
   const template = store.templatesMap.get(id);

@@ -1,15 +1,7 @@
-import type { User, VMTemplate, VM, MetricPoint, Policy } from "@/types";
-import {
-  seedUsers,
-  seedTemplates,
-  seedVms,
-  seedPolicies,
-  seedMetricPoints,
-} from "@/mocks/seed";
-import { hashPassword } from "@/utils/auth";
-import { DEMO_PASSWORD } from "@/constants/auth";
-
-
+import type { User, VMTemplate, VM, MetricPoint, Policy } from '@/types';
+import { seedUsers, seedTemplates, seedVms, seedPolicies, seedMetricPoints } from '@/mocks/seed';
+import { hashPassword } from '@/utils/auth';
+import { DEMO_PASSWORD } from '@/constants/auth';
 
 export interface AscendraStore {
   users: User[];
@@ -23,7 +15,7 @@ export interface AscendraStore {
   vmsMap: Map<string, VM>;
 }
 
-const GLOBAL_KEY = "__ascendraStore";
+const GLOBAL_KEY = '__ascendraStore';
 
 export const rebuildIndexes = (store: AscendraStore): void => {
   store.usersMap.clear();

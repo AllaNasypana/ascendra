@@ -1,6 +1,6 @@
 export const ERole = {
-  ENGINEER: "engineer",
-  ADMIN: "admin",
+  ENGINEER: 'engineer',
+  ADMIN: 'admin',
 } as const;
 
 export type UserRole = (typeof ERole)[keyof typeof ERole];
@@ -13,7 +13,7 @@ export interface User {
   passwordHash: string;
 }
 
-export type PublicUser = Omit<User, "passwordHash">;
+export type PublicUser = Omit<User, 'passwordHash'>;
 
 export interface UserSummary {
   id: string;

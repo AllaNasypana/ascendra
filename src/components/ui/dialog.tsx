@@ -1,7 +1,7 @@
-import type { FC, HTMLAttributes, ComponentProps } from "react";
-import * as DialogPrimitive from "@radix-ui/react-dialog";
-import { X } from "lucide-react";
-import { cn } from "@/utils";
+import type { FC, HTMLAttributes, ComponentProps } from 'react';
+import * as DialogPrimitive from '@radix-ui/react-dialog';
+import { X } from 'lucide-react';
+import { cn } from '@/utils';
 
 const Dialog = DialogPrimitive.Root;
 const DialogTrigger = DialogPrimitive.Trigger;
@@ -14,8 +14,8 @@ export const DialogOverlay: FC<ComponentProps<typeof DialogPrimitive.Overlay>> =
 }) => (
   <DialogPrimitive.Overlay
     className={cn(
-      "fixed inset-0 z-50 bg-black/50 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
-      className
+      'fixed inset-0 z-50 bg-black/50 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0',
+      className,
     )}
     {...props}
   />
@@ -30,8 +30,8 @@ export const DialogContent: FC<ComponentProps<typeof DialogPrimitive.Content>> =
     <DialogOverlay />
     <DialogPrimitive.Content
       className={cn(
-        "fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg duration-200 sm:rounded-lg",
-        className
+        'fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg duration-200 sm:rounded-lg',
+        className,
       )}
       {...props}
     >
@@ -45,10 +45,7 @@ export const DialogContent: FC<ComponentProps<typeof DialogPrimitive.Content>> =
 );
 
 export const DialogHeader: FC<HTMLAttributes<HTMLDivElement>> = ({ className, ...props }) => (
-  <div
-    className={cn("flex flex-col space-y-1.5 text-center sm:text-left", className)}
-    {...props}
-  />
+  <div className={cn('flex flex-col space-y-1.5 text-center sm:text-left', className)} {...props} />
 );
 
 export const DialogTitle: FC<ComponentProps<typeof DialogPrimitive.Title>> = ({
@@ -56,7 +53,7 @@ export const DialogTitle: FC<ComponentProps<typeof DialogPrimitive.Title>> = ({
   ...props
 }) => (
   <DialogPrimitive.Title
-    className={cn("text-lg font-semibold leading-none tracking-tight", className)}
+    className={cn('text-lg font-semibold leading-none tracking-tight', className)}
     {...props}
   />
 );
@@ -66,7 +63,7 @@ export const DialogDescription: FC<ComponentProps<typeof DialogPrimitive.Descrip
   ...props
 }) => (
   <DialogPrimitive.Description
-    className={cn("text-sm text-muted-foreground", className)}
+    className={cn('text-sm text-muted-foreground', className)}
     {...props}
   />
 );

@@ -1,11 +1,9 @@
-"use client";
+'use client';
 
-import { useCallback, useMemo, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-
-import { api } from "@/lib/api-client";
-import type { PublicUser, VM, VMStatus, VMTemplate } from "@/types";
-
+import { useCallback, useMemo, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { api } from '@/lib/api-client';
+import type { PublicUser, VM, VMStatus, VMTemplate } from '@/types';
 import {
   DEFAULT_INVENTORY_SORT,
   getNextInventorySort,
@@ -13,8 +11,7 @@ import {
   type InventorySortColumn,
   type InventorySortDirection,
   type InventorySortState,
-} from "./inventory-sorting";
-
+} from './inventory-sorting';
 export type { InventorySortColumn, InventorySortDirection };
 
 interface InventoryItem {
@@ -23,8 +20,8 @@ interface InventoryItem {
   template?: VMTemplate;
 }
 
-const DEFAULT_SEARCH = "";
-const DEFAULT_STATUS_FILTER: VMStatus | "all" = "all";
+const DEFAULT_SEARCH = '';
+const DEFAULT_STATUS_FILTER: VMStatus | 'all' = 'all';
 
 const createMapById = <T extends { id: string }>(items: T[] = []) => {
   return new Map(items.map((item) => [item.id, item]));
@@ -34,11 +31,7 @@ const normalizeSearch = (value: string) => {
   return value.trim().toLowerCase();
 };
 
-const matchesSearch = (
-  vm: VM,
-  owner: PublicUser | undefined,
-  search: string
-) => {
+const matchesSearch = (vm: VM, owner: PublicUser | undefined, search: string) => {
   if (!search) return true;
 
   return (
@@ -48,40 +41,35 @@ const matchesSearch = (
   );
 };
 
-const matchesStatus = (vm: VM, status: VMStatus | "all") => {
-  return status === "all" || vm.status === status;
+const matchesStatus = (vm: VM, status: VMStatus | 'all') => {
+  return status === 'all' || vm.status === status;
 };
 
 export const useInventory = () => {
   const [search, setSearch] = useState(DEFAULT_SEARCH);
-  const [statusFilter, setStatusFilter] =
-    useState<VMStatus | "all">(DEFAULT_STATUS_FILTER);
-  const [sortState, setSortState] =
-    useState<InventorySortState>(DEFAULT_INVENTORY_SORT);
+  const [statusFilter, setStatusFilter] = useState<VMStatus | 'all'>(DEFAULT_STATUS_FILTER);
+  const [sortState, setSortState] = useState<InventorySortState>(DEFAULT_INVENTORY_SORT);
 
   const { data, isLoading, isError, refetch } = useQuery({
-    queryKey: ["vms"],
+    queryKey: ['vms'],
     queryFn: () => api.vms.list(),
   });
 
   const { data: usersData } = useQuery({
-    queryKey: ["users"],
+    queryKey: ['users'],
     queryFn: () => api.users.list(),
   });
 
   const { data: templatesData } = useQuery({
-    queryKey: ["templates"],
+    queryKey: ['templates'],
     queryFn: () => api.templates.list(),
   });
 
-  const usersById = useMemo(
-    () => createMapById(usersData?.users ?? []),
-    [usersData?.users]
-  );
+  const usersById = useMemo(() => createMapById(usersData?.users ?? []), [usersData?.users]);
 
   const templatesById = useMemo(
     () => createMapById(templatesData?.templates ?? []),
-    [templatesData?.templates]
+    [templatesData?.templates],
   );
 
   const inventoryItems = useMemo(() => {
@@ -94,10 +82,7 @@ export const useInventory = () => {
         template: templatesById.get(vm.templateId),
       }))
       .filter(({ vm, owner }) => {
-        return (
-          matchesSearch(vm, owner, normalizedSearch) &&
-          matchesStatus(vm, statusFilter)
-        );
+        return matchesSearch(vm, owner, normalizedSearch) && matchesStatus(vm, statusFilter);
       });
 
     return sortInventoryItems(items, sortState);

@@ -1,6 +1,5 @@
-import type { FC } from "react";
-
-import { Skeleton } from "@/components/ui";
+import type { FC } from 'react';
+import { Skeleton } from '@/components/ui';
 
 export const TemplatesSkeleton: FC = () => {
   return (

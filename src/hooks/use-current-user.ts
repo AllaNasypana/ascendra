@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { api, authStorage } from "@/lib/api-client";
-import { queryKeys } from "@/lib/query-client";
+import { useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { api, authStorage } from '@/lib/api-client';
+import { queryKeys } from '@/lib/query-client';
 
 export const useCurrentUser = () => {
   const [isAuthReady, setIsAuthReady] = useState(false);
@@ -16,7 +16,7 @@ export const useCurrentUser = () => {
 
   const query = useQuery({
     queryKey: queryKeys.auth.me(userId),
-    queryFn: () => api.auth.me(userId ?? ""),
+    queryFn: () => api.auth.me(userId ?? ''),
     enabled: isAuthReady && Boolean(userId),
     select: (data) => data.user,
   });

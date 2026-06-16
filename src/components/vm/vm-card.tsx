@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import type { FC } from "react";
-import Link from "next/link";
-import { FiExternalLink, FiPlay, FiSquare, FiRefreshCw } from "react-icons/fi";
-import { Badge, Button, Card, CardContent, CardHeader, CardTitle } from "@/components/ui";
-import { cn, formatCurrency, formatRelativeTime, isTransitionStatus } from "@/utils";
-import { EVMStatus, type VM, type VMTemplate } from "@/types";
-import { ResourceBar } from "./resource-bar";
+import type { FC } from 'react';
+import Link from 'next/link';
+import { FiExternalLink, FiPlay, FiSquare, FiRefreshCw } from 'react-icons/fi';
+import { Badge, Button, Card, CardContent, CardHeader, CardTitle } from '@/components/ui';
+import { cn, formatCurrency, formatRelativeTime, isTransitionStatus } from '@/utils';
+import { EVMStatus, type VM, type VMTemplate } from '@/types';
+import { ResourceBar } from './resource-bar';
 
 interface VmCardProps {
   vm: VM;
@@ -16,8 +16,6 @@ interface VmCardProps {
   onRestart?: () => void;
   isActionPending?: boolean;
 }
-
-
 
 export const VmCard: FC<VmCardProps> = ({
   vm,
@@ -34,18 +32,16 @@ export const VmCard: FC<VmCardProps> = ({
   return (
     <Card
       className={cn(
-        "group relative transition-colors hover:border-primary/40",
-        isTransitioning && "opacity-80"
+        'group relative transition-colors hover:border-primary/40',
+        isTransitioning && 'opacity-80',
       )}
     >
-      
-
       <CardHeader className="relative z-10 flex flex-row items-start justify-between space-y-0 pb-3 ">
-        <div >
+        <div>
           <Link href={detailHref} className="flex hover:underline py-2">
-          <CardTitle className="text-base group-hover:underline">{vm.name}</CardTitle>
+            <CardTitle className="text-base group-hover:underline">{vm.name}</CardTitle>
           </Link>
-          
+
           <p className="mt-1 text-xs text-muted-foreground">
             {template?.name ?? vm.templateId} · {vm.region}
           </p>
@@ -57,16 +53,8 @@ export const VmCard: FC<VmCardProps> = ({
         {vm.status === EVMStatus.RUNNING ? (
           <div className="pointer-events-none space-y-2">
             <ResourceBar label="CPU" value={vm.cpuUsagePercent} />
-            <ResourceBar
-              label="Memory"
-              value={vm.memoryUsagePercent}
-              color="bg-chart-memory"
-            />
-            <ResourceBar
-              label="Disk"
-              value={vm.diskUsagePercent}
-              color="bg-chart-warning"
-            />
+            <ResourceBar label="Memory" value={vm.memoryUsagePercent} color="bg-chart-memory" />
+            <ResourceBar label="Disk" value={vm.diskUsagePercent} color="bg-chart-warning" />
           </div>
         ) : (
           <p className="pointer-events-none text-sm text-muted-foreground">
@@ -97,14 +85,14 @@ export const VmCard: FC<VmCardProps> = ({
           )}
           {vm.status === EVMStatus.RUNNING && onRestart && (
             <Button size="sm" variant="ghost" onClick={onRestart} disabled={isActionPending}>
-              <FiRefreshCw className={cn(isActionPending && "animate-spin")} />
+              <FiRefreshCw className={cn(isActionPending && 'animate-spin')} />
               Restart
             </Button>
           )}
           {isTransitioning && (
             <span className="transition-label">
               <FiRefreshCw className="mr-1 h-3 w-3 animate-spin" />
-              {vm.status === EVMStatus.STARTING ? "Starting…" : "Stopping…"}
+              {vm.status === EVMStatus.STARTING ? 'Starting…' : 'Stopping…'}
             </span>
           )}
         </div>

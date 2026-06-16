@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import type { FC } from "react";
-import { useEffect, useState } from "react";
-import { FiMoon, FiSun } from "react-icons/fi";
-import { getInitialTheme, applyTheme } from "@/utils";
-import { THEME_STORAGE_KEY } from "@/constants";
-import { Theme } from "@/types";
+import type { FC } from 'react';
+import { useEffect, useState } from 'react';
+import { FiMoon, FiSun } from 'react-icons/fi';
+import { getInitialTheme, applyTheme } from '@/utils';
+import { THEME_STORAGE_KEY } from '@/constants';
+import { Theme } from '@/types';
 
 export const ThemeToggle: FC = () => {
-  const [theme, setTheme] = useState<Theme>("light");
-  const isDark = theme === "dark";
+  const [theme, setTheme] = useState<Theme>('light');
+  const isDark = theme === 'dark';
 
   useEffect(() => {
     const initial = getInitialTheme();
@@ -18,7 +18,7 @@ export const ThemeToggle: FC = () => {
   }, []);
 
   const toggle = () => {
-    const next = isDark ? "light" : "dark";
+    const next = isDark ? 'light' : 'dark';
     setTheme(next);
     localStorage.setItem(THEME_STORAGE_KEY, next);
     applyTheme(next);
@@ -29,10 +29,10 @@ export const ThemeToggle: FC = () => {
       type="button"
       className="theme-toggle"
       onClick={toggle}
-      aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
+      aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
     >
       {isDark ? <FiSun aria-hidden /> : <FiMoon aria-hidden />}
-      {isDark ? "Light mode" : "Dark mode"}
+      {isDark ? 'Light mode' : 'Dark mode'}
     </button>
   );
 };

@@ -1,12 +1,6 @@
-import { NextResponse } from "next/server";
-import {
-  createUser,
-  getUserByEmail,
-  hashPassword,
-  simulateDelay,
-  toPublicUser,
-} from "@/utils";
-import { User, ERole } from "@/types";
+import { NextResponse } from 'next/server';
+import { createUser, getUserByEmail, hashPassword, simulateDelay, toPublicUser } from '@/utils';
+import { User, ERole } from '@/types';
 
 export const POST = async (request: Request): Promise<NextResponse> => {
   await simulateDelay();
@@ -15,19 +9,19 @@ export const POST = async (request: Request): Promise<NextResponse> => {
     name?: string;
     email?: string;
     password?: string;
-    role?: User["role"];
+    role?: User['role'];
   };
 
   if (!name || !email || !password || !role) {
-    return NextResponse.json({ error: "All fields required" }, { status: 400 });
+    return NextResponse.json({ error: 'All fields required' }, { status: 400 });
   }
 
   if (role !== ERole.ADMIN && role !== ERole.ENGINEER) {
-    return NextResponse.json({ error: "Invalid role" }, { status: 400 });
+    return NextResponse.json({ error: 'Invalid role' }, { status: 400 });
   }
 
   if (getUserByEmail(email)) {
-    return NextResponse.json({ error: "Email already registered" }, { status: 409 });
+    return NextResponse.json({ error: 'Email already registered' }, { status: 409 });
   }
 
   const user = createUser({

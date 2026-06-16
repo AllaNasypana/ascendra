@@ -1,7 +1,7 @@
-import type { FC, ComponentProps } from "react";
-import * as SelectPrimitive from "@radix-ui/react-select";
-import { Check, ChevronDown } from "lucide-react";
-import { cn } from "@/utils";
+import type { FC, ComponentProps } from 'react';
+import * as SelectPrimitive from '@radix-ui/react-select';
+import { Check, ChevronDown } from 'lucide-react';
+import { cn } from '@/utils';
 
 const Select = SelectPrimitive.Root;
 const SelectValue = SelectPrimitive.Value;
@@ -13,8 +13,8 @@ export const SelectTrigger: FC<ComponentProps<typeof SelectPrimitive.Trigger>> =
 }) => (
   <SelectPrimitive.Trigger
     className={cn(
-      "flex h-9 w-full items-center justify-between rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
-      className
+      'flex h-9 w-full items-center justify-between rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50',
+      className,
     )}
     {...props}
   >
@@ -33,8 +33,8 @@ export const SelectContent: FC<ComponentProps<typeof SelectPrimitive.Content>> =
   <SelectPrimitive.Portal>
     <SelectPrimitive.Content
       className={cn(
-        "relative z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover text-popover-foreground shadow-md",
-        className
+        'relative z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover text-popover-foreground shadow-md',
+        className,
       )}
       {...props}
     >
@@ -50,8 +50,8 @@ export const SelectItem: FC<ComponentProps<typeof SelectPrimitive.Item>> = ({
 }) => (
   <SelectPrimitive.Item
     className={cn(
-      "relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-2 pr-8 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
-      className
+      'relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-2 pr-8 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
+      className,
     )}
     {...props}
   >

@@ -1,29 +1,14 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-
-import { FiArrowLeft, FiExternalLink, FiPlay, FiSquare, FiRefreshCw } from "react-icons/fi";
-import type { FC } from "react";
-
-import { UtilizationChart } from "@/components/charts";
-import {
-  Badge,
-  Button,
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  Skeleton,
-} from "@/components/ui";
-import { useVmActions } from "@/features/developer/use-vm-actions";
-import {
-  cn,
-  formatCurrency,
-  formatRelativeTime,
-  formatUptime,
-} from "@/utils";
-import { EVMStatus } from "@/types";
-import { useVm } from "@/features/developer/use-vm";
+import type { FC } from 'react';
+import Link from 'next/link';
+import { FiArrowLeft, FiExternalLink, FiPlay, FiSquare, FiRefreshCw } from 'react-icons/fi';
+import { UtilizationChart } from '@/components/charts';
+import { Badge, Button, Card, CardContent, CardHeader, CardTitle, Skeleton } from '@/components/ui';
+import { useVmActions } from '@/features/developer/vm-detail/use-vm-actions';
+import { cn, formatCurrency, formatRelativeTime, formatUptime } from '@/utils';
+import { EVMStatus } from '@/types';
+import { useVm } from '@/features/developer/vm-detail/use-vm';
 
 interface VmDetailProps {
   vmId: string;
@@ -48,7 +33,6 @@ export const VmDetail: FC<VmDetailProps> = ({ vmId, isAdmin = false }) => {
     return <p className="text-muted-foreground">Machine not found.</p>;
   }
 
-
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-4">
@@ -65,40 +49,39 @@ export const VmDetail: FC<VmDetailProps> = ({ vmId, isAdmin = false }) => {
           </p>
         </div>
 
-        
         {!isAdmin && (
           <div className="flex gap-2">
-          {vm.status === EVMStatus.RUNNING && (
-            <>
-              <Button asChild>
-                <a href={vm.ideUrl} target="_blank" rel="noopener noreferrer">
-                  <FiExternalLink />
-                  Open in IDE
-                </a>
+            {vm.status === EVMStatus.RUNNING && (
+              <>
+                <Button asChild>
+                  <a href={vm.ideUrl} target="_blank" rel="noopener noreferrer">
+                    <FiExternalLink />
+                    Open in IDE
+                  </a>
+                </Button>
+                <Button variant="outline" onClick={actions.stop} disabled={actions.isPending}>
+                  <FiSquare />
+                  Stop
+                </Button>
+                <Button variant="ghost" onClick={actions.restart} disabled={actions.isPending}>
+                  <FiRefreshCw className={cn(actions.isPending && 'animate-spin')} />
+                  Restart
+                </Button>
+              </>
+            )}
+            {vm.status === EVMStatus.STOPPED && (
+              <Button onClick={actions.start} disabled={actions.isPending}>
+                <FiPlay />
+                Start
               </Button>
-              <Button variant="outline" onClick={actions.stop} disabled={actions.isPending}>
-                <FiSquare />
-                Stop
-              </Button>
-              <Button variant="ghost" onClick={actions.restart} disabled={actions.isPending}>
-                <FiRefreshCw className={cn(actions.isPending && "animate-spin")} />
-                Restart
-              </Button>
-            </>
-          )}
-          {vm.status === EVMStatus.STOPPED && (
-            <Button onClick={actions.start} disabled={actions.isPending}>
-              <FiPlay />
-              Start
-            </Button>
-          )}
-          {isTransitioning && (
-            <span className="transition-label text-sm">
-              <FiRefreshCw className="mr-1 h-4 w-4 animate-spin" />
-              {vm.status === EVMStatus.STARTING ? "Starting…" : "Stopping…"}
-            </span>
-          )}
-        </div>
+            )}
+            {isTransitioning && (
+              <span className="transition-label text-sm">
+                <FiRefreshCw className="mr-1 h-4 w-4 animate-spin" />
+                {vm.status === EVMStatus.STARTING ? 'Starting…' : 'Stopping…'}
+              </span>
+            )}
+          </div>
         )}
       </div>
 
@@ -166,19 +149,22 @@ export const VmDetail: FC<VmDetailProps> = ({ vmId, isAdmin = false }) => {
             </div>
             <div className="flex justify-between">
               <span className="text-muted-foreground">vCPU</span>
-              <span>{template?.vCpu ?? "—"}</span>
+              <span>{template?.vCpu ?? '—'}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-muted-foreground">Memory</span>
-              <span>{template ? `${template.memoryGb} GB` : "—"}</span>
+              <span>{template ? `${template.memoryGb} GB` : '—'}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-muted-foreground">Disk</span>
-              <span>{template ? `${template.diskSizeGb} GB` : "—"} · {Math.round(vm.diskUsagePercent)}% used</span>
+              <span>
+                {template ? `${template.diskSizeGb} GB` : '—'} · {Math.round(vm.diskUsagePercent)}%
+                used
+              </span>
             </div>
             <div className="flex justify-between">
               <span className="text-muted-foreground">Base image</span>
-              <span>{template?.baseImage ?? "—"}</span>
+              <span>{template?.baseImage ?? '—'}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-muted-foreground">Last active</span>
@@ -193,10 +179,7 @@ export const VmDetail: FC<VmDetailProps> = ({ vmId, isAdmin = false }) => {
                 <span className="text-muted-foreground">Tools</span>
                 <div className="mt-1 flex flex-wrap gap-1">
                   {template.preinstalledTools.map((tool) => (
-                    <span
-                      key={tool}
-                      className="rounded bg-muted px-2 py-0.5 text-xs"
-                    >
+                    <span key={tool} className="rounded bg-muted px-2 py-0.5 text-xs">
                       {tool}
                     </span>
                   ))}

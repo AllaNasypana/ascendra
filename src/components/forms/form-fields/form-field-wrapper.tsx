@@ -19,21 +19,19 @@ export function FormFieldWrapper<T extends FieldValues>({
   label,
   error,
   className,
-  render  
+  render,
 }: FormFieldProps<T>) {
   return (
     <div className={`flex flex-col w-full pb-6 relative ${className ?? ''}`}>
-      {label && <Label className='mb-2' htmlFor={name}>{label}</Label>}
-
-      <Controller
-        name={name}
-        control={control}
-        render={({ field }) => render(field)}
-      />
-
-      {error && (
-        <p className="form-error absolute bottom-1 left-0">{error}</p>
+      {label && (
+        <Label className="mb-2" htmlFor={name}>
+          {label}
+        </Label>
       )}
+
+      <Controller name={name} control={control} render={({ field }) => render(field)} />
+
+      {error && <p className="form-error absolute bottom-1 left-0">{error}</p>}
     </div>
   );
 }

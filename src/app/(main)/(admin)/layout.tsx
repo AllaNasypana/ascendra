@@ -5,10 +5,7 @@ import { ERole } from '@/types';
 export default function AdminLayout({ children }: { children: ReactNode }) {
   return (
     <AuthGuard allowedRoles={[ERole.ADMIN]}>
-        <AppShell variant={ERole.ADMIN}>
-          {children}
-        </AppShell>
-        
+      <AppShell variant={ERole.ADMIN}>{children}</AppShell>
     </AuthGuard>
   );
 }

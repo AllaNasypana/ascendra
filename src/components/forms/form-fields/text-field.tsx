@@ -1,7 +1,6 @@
 'use client';
 
 import type { InputHTMLAttributes } from 'react';
-
 import { cn } from '@/utils';
 import { FormFieldWrapper } from './form-field-wrapper';
 import { Control, FieldValues, Path } from 'react-hook-form';
@@ -35,9 +34,7 @@ export function TextField<T extends FieldValues>({
       className={className}
       render={(field) => (
         <Input
-        className={cn(
-          error && 'border-destructive focus-visible:ring-destructive'
-        )}
+          className={cn(error && 'border-destructive focus-visible:ring-destructive')}
           id={name}
           type={type}
           autoComplete={name}
@@ -45,10 +42,7 @@ export function TextField<T extends FieldValues>({
           {...rest}
           value={field.value ?? ''}
           onChange={(event) => {
-            const value =
-              type === "number"
-                ? event.target.valueAsNumber
-                : event.target.value;
+            const value = type === 'number' ? event.target.valueAsNumber : event.target.value;
 
             field.onChange(Number.isNaN(value) ? undefined : value);
           }}

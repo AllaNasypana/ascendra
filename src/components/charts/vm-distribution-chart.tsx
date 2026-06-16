@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import type { FC } from "react";
+import type { FC } from 'react';
 import {
   BarChart,
   Bar,
@@ -10,7 +10,7 @@ import {
   Tooltip,
   ResponsiveContainer,
   Cell,
-} from "recharts";
+} from 'recharts';
 
 interface VmDistributionItem {
   name: string;
@@ -29,33 +29,33 @@ export const VmDistributionChart: FC<VmDistributionChartProps> = ({ data, height
       <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
       <XAxis
         dataKey="name"
-        tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }}
+        tick={{ fontSize: 10, fill: 'hsl(var(--muted-foreground))' }}
         angle={-30}
         textAnchor="end"
         height={60}
-        axisLine={{ stroke: "hsl(var(--border))" }}
-        tickLine={{ stroke: "hsl(var(--border))" }}
+        axisLine={{ stroke: 'hsl(var(--border))' }}
+        tickLine={{ stroke: 'hsl(var(--border))' }}
       />
       <YAxis
         domain={[0, 100]}
-        tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }}
+        tick={{ fontSize: 11, fill: 'hsl(var(--muted-foreground))' }}
         unit="%"
-        axisLine={{ stroke: "hsl(var(--border))" }}
-        tickLine={{ stroke: "hsl(var(--border))" }}
+        axisLine={{ stroke: 'hsl(var(--border))' }}
+        tickLine={{ stroke: 'hsl(var(--border))' }}
       />
       <Tooltip
         contentStyle={{
-          backgroundColor: "hsl(var(--popover))",
-          color: "hsl(var(--popover-foreground))",
-          border: "1px solid hsl(var(--border))",
-          borderRadius: "8px",
+          backgroundColor: 'hsl(var(--popover))',
+          color: 'hsl(var(--popover-foreground))',
+          border: '1px solid hsl(var(--border))',
+          borderRadius: '8px',
         }}
       />
       <Bar dataKey="cpu" name="CPU %" radius={[4, 4, 0, 0]}>
         {data.map((entry, index) => (
           <Cell
             key={`cell-${index}`}
-            fill={entry.isIdle ? "hsl(var(--chart-idle))" : "hsl(var(--chart-cpu))"}
+            fill={entry.isIdle ? 'hsl(var(--chart-idle))' : 'hsl(var(--chart-cpu))'}
           />
         ))}
       </Bar>

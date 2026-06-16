@@ -1,9 +1,9 @@
 export const EVMStatus = {
-  RUNNING: "running",
-  STOPPED: "stopped",
-  STARTING: "starting",
-  STOPPING: "stopping",
-  ERROR: "error",
+  RUNNING: 'running',
+  STOPPED: 'stopped',
+  STARTING: 'starting',
+  STOPPING: 'stopping',
+  ERROR: 'error',
 } as const;
 
 export type VMStatus = (typeof EVMStatus)[keyof typeof EVMStatus];
@@ -42,7 +42,7 @@ export interface Policy {
 }
 
 export interface FleetUtilization {
-  period: "real-time" | "last-24-hours" | "last-30-days";
+  period: 'real-time' | 'last-24-hours' | 'last-30-days';
   totalVms: number;
   runningVms: number;
   stoppedVms: number;

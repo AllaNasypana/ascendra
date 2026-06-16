@@ -1,1 +1,1 @@
-export { VmCard } from "./vm-card";
+export { VmCard } from './vm-card';

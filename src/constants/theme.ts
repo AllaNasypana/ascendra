@@ -1,1 +1,1 @@
-export const THEME_STORAGE_KEY = "ascendra-theme";
+export const THEME_STORAGE_KEY = 'ascendra-theme';

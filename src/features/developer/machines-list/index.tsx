@@ -1,10 +1,9 @@
-"use client";
+'use client';
 
-import type { FC } from "react";
-import { Skeleton } from "@/components/ui";
-import { VmCardActions } from "./vm-card-actions";
-import { useUserMachines } from "./use-user-machines";
-
+import type { FC } from 'react';
+import { Skeleton } from '@/components/ui';
+import { VmCardActions } from '@/features/developer/machines-list/vm-card-actions';
+import { useUserMachines } from '@/features/developer/machines-list/use-user-machines';
 
 export const MachinesList: FC = () => {
   const { vms, templates, isLoading, isError, refetch } = useUserMachines();
@@ -29,7 +28,6 @@ export const MachinesList: FC = () => {
       </div>
     );
   }
-
 
   if (vms.length === 0) {
     return (

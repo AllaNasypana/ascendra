@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import type { FC } from "react";
+import type { FC } from 'react';
 import {
   LineChart,
   Line,
@@ -10,7 +10,7 @@ import {
   Tooltip,
   ResponsiveContainer,
   Legend,
-} from "recharts";
+} from 'recharts';
 
 interface ChartDataPoint {
   label: string;
@@ -35,26 +35,26 @@ export const UtilizationChart: FC<UtilizationChartProps> = ({
       <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
       <XAxis
         dataKey="label"
-        tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }}
-        axisLine={{ stroke: "hsl(var(--border))" }}
-        tickLine={{ stroke: "hsl(var(--border))" }}
+        tick={{ fontSize: 11, fill: 'hsl(var(--muted-foreground))' }}
+        axisLine={{ stroke: 'hsl(var(--border))' }}
+        tickLine={{ stroke: 'hsl(var(--border))' }}
       />
       <YAxis
         domain={[0, 100]}
-        tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }}
+        tick={{ fontSize: 11, fill: 'hsl(var(--muted-foreground))' }}
         unit="%"
-        axisLine={{ stroke: "hsl(var(--border))" }}
-        tickLine={{ stroke: "hsl(var(--border))" }}
+        axisLine={{ stroke: 'hsl(var(--border))' }}
+        tickLine={{ stroke: 'hsl(var(--border))' }}
       />
       <Tooltip
         contentStyle={{
-          backgroundColor: "hsl(var(--popover))",
-          color: "hsl(var(--popover-foreground))",
-          border: "1px solid hsl(var(--border))",
-          borderRadius: "8px",
+          backgroundColor: 'hsl(var(--popover))',
+          color: 'hsl(var(--popover-foreground))',
+          border: '1px solid hsl(var(--border))',
+          borderRadius: '8px',
         }}
       />
-      <Legend wrapperStyle={{ color: "hsl(var(--foreground))" }} />
+      <Legend wrapperStyle={{ color: 'hsl(var(--foreground))' }} />
       <Line
         type="monotone"
         dataKey="cpu"

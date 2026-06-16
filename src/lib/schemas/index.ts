@@ -1,3 +1,3 @@
-export * from "./login";
-export * from "./registration";
-export * from "./template";
+export * from './login';
+export * from './registration';
+export * from './template';

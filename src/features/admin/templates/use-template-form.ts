@@ -1,32 +1,26 @@
-"use client";
+'use client';
 
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { toast } from "react-toastify";
-
-import { api } from "@/lib/api-client";
-import type { VMTemplate } from "@/types";
-
-import type { TemplateFormValues } from "@/lib/schemas";
-import { toTemplatePayload } from "./template-mappers";
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'react-toastify';
+import { api } from '@/lib/api-client';
+import type { VMTemplate } from '@/types';
+import type { TemplateFormValues } from '@/lib/schemas';
+import { toTemplatePayload } from './template-mappers';
 
 interface UseTemplateFormParams {
   template?: VMTemplate;
   onSuccess: () => void;
 }
 
-export const useTemplateForm = ({
-  template,
-  onSuccess,
-}: UseTemplateFormParams) => {
+export const useTemplateForm = ({ template, onSuccess }: UseTemplateFormParams) => {
   const queryClient = useQueryClient();
   const isEdit = Boolean(template);
 
   const createMutation = useMutation({
-    mutationFn: (data: TemplateFormValues) =>
-      api.templates.create(toTemplatePayload(data)),
+    mutationFn: (data: TemplateFormValues) => api.templates.create(toTemplatePayload(data)),
     onSuccess: () => {
-      toast.success("Template created");
-      queryClient.invalidateQueries({ queryKey: ["templates"] });
+      toast.success('Template created');
+      queryClient.invalidateQueries({ queryKey: ['templates'] });
       onSuccess();
     },
     onError: (error: Error) => toast.error(error.message),
@@ -35,14 +29,14 @@ export const useTemplateForm = ({
   const updateMutation = useMutation({
     mutationFn: (data: TemplateFormValues) => {
       if (!template) {
-        throw new Error("Template is required for update");
+        throw new Error('Template is required for update');
       }
 
       return api.templates.update(template.id, toTemplatePayload(data));
     },
     onSuccess: () => {
-      toast.success("Template updated");
-      queryClient.invalidateQueries({ queryKey: ["templates"] });
+      toast.success('Template updated');
+      queryClient.invalidateQueries({ queryKey: ['templates'] });
       onSuccess();
     },
     onError: (error: Error) => toast.error(error.message),

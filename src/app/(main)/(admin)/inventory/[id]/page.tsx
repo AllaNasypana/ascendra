@@ -1,4 +1,4 @@
-import { VmDetail } from "@/features/developer/vm-detail";
+import { VmDetail } from '@/features/developer/vm-detail';
 
 interface PageProps {
   params: Promise<{ id: string }>;

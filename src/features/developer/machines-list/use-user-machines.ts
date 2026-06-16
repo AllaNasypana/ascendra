@@ -1,14 +1,18 @@
-import { useAuth } from "@/hooks/useAuth";
-import { api } from "@/lib/api-client";
-import { isTransitionStatus } from "@/utils";
-import { useQuery } from "@tanstack/react-query";
-
+import { useAuth } from '@/hooks/use-auth';
+import { api } from '@/lib/api-client';
+import { isTransitionStatus } from '@/utils';
+import { useQuery } from '@tanstack/react-query';
 
 export const useUserMachines = () => {
-    const { user } = useAuth();
+  const { user } = useAuth();
 
-  const { data: vmsData, isLoading, isError, refetch } = useQuery({
-    queryKey: ["vms", user?.id],
+  const {
+    data: vmsData,
+    isLoading,
+    isError,
+    refetch,
+  } = useQuery({
+    queryKey: ['vms', user?.id],
     queryFn: () => api.vms.list({ ownerId: user!.id }),
     enabled: !!user,
     refetchInterval: (query) => {
@@ -19,7 +23,7 @@ export const useUserMachines = () => {
   });
 
   const { data: templatesData } = useQuery({
-    queryKey: ["templates"],
+    queryKey: ['templates'],
     queryFn: () => api.templates.list(),
   });
 
@@ -30,6 +34,4 @@ export const useUserMachines = () => {
     isError,
     refetch,
   };
-
-
-}
+};

@@ -1,10 +1,12 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { registrationSchema, type RegistrationSchema } from '@/lib/schemas';
 import { ERole } from '@/types';
 import { useAuth } from '@/hooks';
+import { getRoleRedirectPath } from '@/utils';
 
 const DEFAULT_VALUES = {
   name: '',
@@ -15,6 +17,7 @@ const DEFAULT_VALUES = {
 };
 
 export const useRegistrationForm = () => {
+  const router = useRouter();
   const { register, isRegisterPending } = useAuth();
 
   const {
@@ -27,14 +30,19 @@ export const useRegistrationForm = () => {
     defaultValues: DEFAULT_VALUES,
   });
 
-  const onSubmit = (data: RegistrationSchema) => {
+  const onSubmit = async (data: RegistrationSchema) => {
     if (!isValid || isRegisterPending) return;
-    register({
+    const user = await register({
       name: data.name,
       email: data.email,
       password: data.password,
       role: data.role,
     });
+
+    if (!user) return;
+
+    router.replace(getRoleRedirectPath(user.role));
+    router.refresh();
   };
 
   return {

@@ -1,16 +1,16 @@
-"use client";
+'use client';
 
-import type { FC, ReactNode } from "react";
-import { useState } from "react";
-import { usePathname } from "next/navigation";
-import {  FiMenu, FiX } from "react-icons/fi";
-import { cn } from "@/utils";
-import { Button } from "@/components/ui";
-import { useAuth } from "@/hooks";
-import { UserRole, ERole } from "@/types";
-import { Sidebar } from "./Sidebar";
-
-
+import type { FC, ReactNode } from 'react';
+import { useState } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
+import { FiMenu, FiX } from 'react-icons/fi';
+import { cn } from '@/utils';
+import { Button } from '@/components/ui';
+import { useAuth } from '@/hooks';
+import type { UserRole } from '@/types';
+import { ERole } from '@/types';
+import { Sidebar } from './Sidebar';
+import { ROUTES } from '@/constants';
 interface AppShellProps {
   children: ReactNode;
   variant?: UserRole;
@@ -18,8 +18,26 @@ interface AppShellProps {
 
 export const AppShell: FC<AppShellProps> = ({ children, variant }) => {
   const pathname = usePathname();
+  const router = useRouter();
   const { user, logout } = useAuth();
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  const closeMobileSidebar = () => {
+    setMobileOpen(false);
+  };
+
+  const toggleMobileSidebar = () => {
+    setMobileOpen((isOpen) => !isOpen);
+  };
+
+  const handleLogout = () => {
+    logout();
+    closeMobileSidebar();
+    router.replace(ROUTES.login);
+    router.refresh();
+  };
+
+  const shellTitle = variant === ERole.ADMIN ? 'Admin Console' : 'Workspaces';
 
   return (
     <div className="app-shell" data-variant={variant}>
@@ -28,12 +46,12 @@ export const AppShell: FC<AppShellProps> = ({ children, variant }) => {
           type="button"
           className="app-shell-mobile-overlay md:hidden"
           aria-label="Close navigation menu"
-          onClick={() => setMobileOpen(false)}
+          onClick={closeMobileSidebar}
         />
       )}
 
       <aside
-        className={cn("app-shell-sidebar app-shell-sidebar-mobile md:static md:translate-x-0")}
+        className={cn('app-shell-sidebar app-shell-sidebar-mobile md:static md:translate-x-0')}
         data-open={mobileOpen}
         aria-label="Sidebar"
       >
@@ -41,8 +59,8 @@ export const AppShell: FC<AppShellProps> = ({ children, variant }) => {
           variant={variant}
           pathname={pathname}
           user={user}
-          logout={logout}
-          onNavigate={() => setMobileOpen(false)}
+          logout={handleLogout}
+          onNavigate={closeMobileSidebar}
         />
       </aside>
 
@@ -51,14 +69,14 @@ export const AppShell: FC<AppShellProps> = ({ children, variant }) => {
           <Button
             variant="ghost"
             size="icon"
-            aria-label={mobileOpen ? "Close menu" : "Open menu"}
+            aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
             aria-expanded={mobileOpen}
-            onClick={() => setMobileOpen((open) => !open)}
+            onClick={toggleMobileSidebar}
           >
             {mobileOpen ? <FiX aria-hidden /> : <FiMenu aria-hidden />}
           </Button>
           <span className="text-sm font-semibold">
-            {variant === ERole.ADMIN ? "Admin Console" : "Workspaces"}
+            {shellTitle}
           </span>
         </header>
 

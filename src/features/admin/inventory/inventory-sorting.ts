@@ -1,8 +1,8 @@
-import type { VM } from "@/types";
+import type { VM } from '@/types';
 
-export type InventorySortColumn = "cpu" | "memory" | "disk" | "cost";
+export type InventorySortColumn = 'cpu' | 'memory' | 'disk' | 'cost';
 
-export type InventorySortDirection = "asc" | "desc";
+export type InventorySortDirection = 'asc' | 'desc';
 
 export interface InventorySortState {
   column: InventorySortColumn;
@@ -10,8 +10,8 @@ export interface InventorySortState {
 }
 
 export const DEFAULT_INVENTORY_SORT: InventorySortState = {
-  column: "cpu",
-  direction: "desc",
+  column: 'cpu',
+  direction: 'desc',
 };
 
 const SORT_ACCESSORS: Record<InventorySortColumn, (vm: VM) => number> = {
@@ -23,7 +23,7 @@ const SORT_ACCESSORS: Record<InventorySortColumn, (vm: VM) => number> = {
 
 export const getNextInventorySort = (
   currentSort: InventorySortState,
-  column: InventorySortColumn
+  column: InventorySortColumn,
 ): InventorySortState => {
   if (currentSort.column !== column) {
     return {
@@ -34,16 +34,16 @@ export const getNextInventorySort = (
 
   return {
     column,
-    direction: currentSort.direction === "asc" ? "desc" : "asc",
+    direction: currentSort.direction === 'asc' ? 'desc' : 'asc',
   };
 };
 
 export const sortInventoryItems = <T extends { vm: VM }>(
   items: T[],
-  sort: InventorySortState
+  sort: InventorySortState,
 ): T[] => {
   const getValue = SORT_ACCESSORS[sort.column];
-  const directionMultiplier = sort.direction === "asc" ? 1 : -1;
+  const directionMultiplier = sort.direction === 'asc' ? 1 : -1;
 
   return [...items].sort((a, b) => {
     const valueDiff = getValue(a.vm) - getValue(b.vm);

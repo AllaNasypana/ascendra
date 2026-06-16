@@ -1,9 +1,5 @@
-import { FleetOverview } from "@/features/admin/overview";
+import { FleetOverview } from '@/features/admin/overview';
 
 export default function OverviewPage() {
-  return (
-   
-      
-        <FleetOverview />
-  );
+  return <FleetOverview />;
 }

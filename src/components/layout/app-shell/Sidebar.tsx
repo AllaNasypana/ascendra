@@ -1,15 +1,14 @@
-"use client";
+'use client';
 
-import type { FC, ReactNode } from "react";
+import type { FC, ReactNode } from 'react';
 
-import Link from "next/link";
-import { FiLogOut, FiMonitor, FiServer, FiGrid, FiLayers } from "react-icons/fi";
-import { Button } from "@/components/ui";
-import { useAuth } from "@/hooks";
-import { ThemeToggle } from "../theme-toggle";
-import { ERole, type UserRole} from "@/types";
-import { ROUTES } from "@/constants";
-
+import Link from 'next/link';
+import { FiLogOut, FiMonitor, FiServer, FiGrid, FiLayers } from 'react-icons/fi';
+import { Button } from '@/components/ui';
+import { useAuth } from '@/hooks';
+import { ThemeToggle } from '../theme-toggle';
+import { ERole, type UserRole } from '@/types';
+import { ROUTES } from '@/constants';
 
 interface NavItem {
   href: string;
@@ -18,31 +17,24 @@ interface NavItem {
 }
 
 const developerNav: NavItem[] = [
-  { href: ROUTES.machines, label: "My Machines", icon: <FiMonitor aria-hidden /> },
+  { href: ROUTES.machines, label: 'My Machines', icon: <FiMonitor aria-hidden /> },
 ];
 
 const adminNav: NavItem[] = [
-  { href: ROUTES.overview, label: "Fleet Overview", icon: <FiGrid aria-hidden /> },
-  { href: ROUTES.inventory, label: "VM Inventory", icon: <FiServer aria-hidden /> },
-  { href: ROUTES.templates, label: "Templates", icon: <FiLayers aria-hidden /> },
+  { href: ROUTES.overview, label: 'Fleet Overview', icon: <FiGrid aria-hidden /> },
+  { href: ROUTES.inventory, label: 'VM Inventory', icon: <FiServer aria-hidden /> },
+  { href: ROUTES.templates, label: 'Templates', icon: <FiLayers aria-hidden /> },
 ];
 
-interface SidebarProps { 
+interface SidebarProps {
   variant?: UserRole;
   pathname: string;
-  user: ReturnType<typeof useAuth>["user"];
+  user: ReturnType<typeof useAuth>['user'];
   logout: () => void;
   onNavigate?: () => void;
 }
 
-export const Sidebar: FC<SidebarProps> = ({
-  variant,
-  pathname,
-  user,
-  logout,
-  onNavigate,
-
-}) => {
+export const Sidebar: FC<SidebarProps> = ({ variant, pathname, user, logout, onNavigate }) => {
   const nav = variant === ERole.ADMIN ? adminNav : developerNav;
   const isAdmin = user?.role === ERole.ADMIN;
   const isAdminVariant = variant === ERole.ADMIN;
@@ -56,7 +48,7 @@ export const Sidebar: FC<SidebarProps> = ({
         <div>
           <p className="text-sm font-semibold">Ascendra</p>
           <p className="app-shell-sidebar-muted text-xs">
-            {isAdmin ? "Admin Console" : "Workspaces"}
+            {isAdmin ? 'Admin Console' : 'Workspaces'}
           </p>
         </div>
       </div>
@@ -66,7 +58,7 @@ export const Sidebar: FC<SidebarProps> = ({
           <Link
             key={item.href}
             href={item.href}
-            aria-current={pathname.startsWith(item.href) ? "page" : undefined}
+            aria-current={pathname.startsWith(item.href) ? 'page' : undefined}
             className="app-shell-nav-link"
             onClick={onNavigate}
           >
@@ -84,7 +76,7 @@ export const Sidebar: FC<SidebarProps> = ({
 
         <ThemeToggle />
 
-        { isAdmin && !isAdminVariant && (
+        {isAdmin && !isAdminVariant && (
           <Link href={ROUTES.overview} className="mb-2 mt-2 block" onClick={onNavigate}>
             <Button variant="outline" size="sm" className="btn-shell-outline w-full">
               Switch to Admin

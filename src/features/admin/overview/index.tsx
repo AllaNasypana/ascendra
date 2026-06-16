@@ -1,16 +1,14 @@
-"use client";
+'use client';
 
-import type { FC } from "react";
+import type { FC } from 'react';
+import { UtilizationChart } from '@/components/charts';
+import { MetricCard } from '@/components/metrics';
+import { Card, CardContent, CardHeader, CardTitle, Skeleton } from '@/components/ui';
+import { formatCurrency, formatPercent } from '@/utils';
 
-import { UtilizationChart } from "@/components/charts";
-import { MetricCard } from "@/components/metrics";
-import { Card, CardContent, CardHeader, CardTitle, Skeleton } from "@/components/ui";
-import { formatCurrency, formatPercent } from "@/utils";
-
-import { useOverview } from "./use-overview";
+import { useOverview } from './use-overview';
 
 export const FleetOverview: FC = () => {
- 
   const { fleet, chartData, idleCount, isLoading, isError, refetch } = useOverview();
 
   if (isLoading) {
@@ -36,8 +34,6 @@ export const FleetOverview: FC = () => {
       </div>
     );
   }
-
- 
 
   return (
     <div className="space-y-6">
@@ -73,7 +69,7 @@ export const FleetOverview: FC = () => {
 
       {idleCount > 0 && (
         <div className="alert-banner" role="status">
-          {idleCount} running VM{idleCount > 1 ? "s" : ""} appear idle (low CPU + inactive &gt;30m).
+          {idleCount} running VM{idleCount > 1 ? 's' : ''} appear idle (low CPU + inactive &gt;30m).
           Consider reviewing in Inventory.
         </div>
       )}

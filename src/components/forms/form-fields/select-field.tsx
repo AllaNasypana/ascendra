@@ -2,13 +2,7 @@
 
 import { FormFieldWrapper } from './form-field-wrapper';
 import { Control, FieldValues, Path } from 'react-hook-form';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui';
 
 interface SelectOption {
   value: string;

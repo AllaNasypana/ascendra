@@ -1,1 +1,1 @@
-export { getStore, resetDb, type AscendraStore } from "./store";
+export { getStore, resetDb, type AscendraStore } from './store';

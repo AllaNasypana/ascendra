@@ -1,10 +1,9 @@
-"use client";
+'use client';
 
-import type { FC } from "react";
-import { useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-
+import type { FC } from 'react';
+import { useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Button,
   Dialog,
@@ -12,17 +11,12 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui";
-import { TextField } from "@/components/forms/form-fields/text-field";
-import type { VMTemplate } from "@/types";
-
-import {
-  
-  templateSchema,
-  type TemplateFormValues,
-} from "@/lib/schemas";
-import { getTemplateDefaultValues, DEFAULT_TEMPLATE_VALUES } from "./template-mappers";
-import { useTemplateForm } from "./use-template-form";
+} from '@/components/ui';
+import { TextField } from '@/components/forms/form-fields/text-field';
+import type { VMTemplate } from '@/types';
+import { templateSchema, type TemplateFormValues } from '@/lib/schemas';
+import { getTemplateDefaultValues, DEFAULT_TEMPLATE_VALUES } from './template-mappers';
+import { useTemplateForm } from './use-template-form';
 
 interface TemplateFormDialogProps {
   open: boolean;
@@ -66,23 +60,14 @@ export const TemplateFormDialog: FC<TemplateFormDialogProps> = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{isEdit ? "Edit Template" : "Create Template"}</DialogTitle>
+          <DialogTitle>{isEdit ? 'Edit Template' : 'Create Template'}</DialogTitle>
           <DialogDescription>
             Define VM specs and preinstalled tools for developer workspaces.
           </DialogDescription>
         </DialogHeader>
 
-        <form
-          onSubmit={handleSubmit(submitTemplate)}
-          className="space-y-4"
-          noValidate
-        >
-          <TextField
-            name="name"
-            control={control}
-            label="Name"
-            error={errors.name?.message}
-          />
+        <form onSubmit={handleSubmit(submitTemplate)} className="space-y-4" noValidate>
+          <TextField name="name" control={control} label="Name" error={errors.name?.message} />
 
           <TextField
             name="description"
@@ -138,7 +123,7 @@ export const TemplateFormDialog: FC<TemplateFormDialogProps> = ({
             </Button>
 
             <Button type="submit" disabled={isPending}>
-              {isEdit ? "Save Changes" : "Create Template"}
+              {isEdit ? 'Save Changes' : 'Create Template'}
             </Button>
           </div>
         </form>

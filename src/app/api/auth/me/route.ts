@@ -1,6 +1,6 @@
-import { NextResponse } from "next/server";
-import { getUserById, simulateDelay, toPublicUser } from "@/utils";
-import { CURRENT_USER_ID } from "@/constants";
+import { NextResponse } from 'next/server';
+import { getUserById, simulateDelay, toPublicUser } from '@/utils';
+import { CURRENT_USER_ID } from '@/constants';
 
 export const GET = async (request: Request): Promise<NextResponse> => {
   await simulateDelay(200);
@@ -8,12 +8,12 @@ export const GET = async (request: Request): Promise<NextResponse> => {
   const userId = searchParams.get(CURRENT_USER_ID);
 
   if (!userId) {
-    return NextResponse.json({ error: "user Id required" }, { status: 400 });
+    return NextResponse.json({ error: 'user Id required' }, { status: 400 });
   }
 
   const user = getUserById(userId);
   if (!user) {
-    return NextResponse.json({ error: "User not found" }, { status: 404 });
+    return NextResponse.json({ error: 'User not found' }, { status: 404 });
   }
 
   return NextResponse.json({ user: toPublicUser(user) });

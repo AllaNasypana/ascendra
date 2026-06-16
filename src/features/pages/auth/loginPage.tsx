@@ -40,7 +40,7 @@ export const LoginPageView = () => {
         </div>
 
         <p className="mt-4 text-center text-sm text-muted-foreground">
-          No account?{" "}
+          No account?{' '}
           <Link href="/registration" className="text-primary underline underline-offset-2">
             Register
           </Link>

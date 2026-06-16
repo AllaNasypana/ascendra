@@ -1,15 +1,8 @@
-import type { FC } from "react";
-import { FiEdit2 } from "react-icons/fi";
-
-import {
-  Button,
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui";
-import type { VMTemplate } from "@/types";
-import { SpecStat } from "./spec-stat";
+import type { FC } from 'react';
+import { FiEdit2 } from 'react-icons/fi';
+import { Button, Card, CardContent, CardHeader, CardTitle } from '@/components/ui';
+import type { VMTemplate } from '@/types';
+import { SpecStat } from './spec-stat';
 
 interface TemplateCardProps {
   template: VMTemplate;
@@ -22,9 +15,7 @@ export const TemplateCard: FC<TemplateCardProps> = ({ template, onEdit }) => {
       <CardHeader className="flex flex-row items-start justify-between">
         <div>
           <CardTitle>{template.name}</CardTitle>
-          <p className="mt-1 text-sm text-muted-foreground">
-            {template.description}
-          </p>
+          <p className="mt-1 text-sm text-muted-foreground">{template.description}</p>
         </div>
 
         <Button
