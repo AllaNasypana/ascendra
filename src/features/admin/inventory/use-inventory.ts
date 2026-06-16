@@ -61,17 +61,17 @@ export const useInventory = () => {
 
   const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["vms"],
-    queryFn: api.vms.list,
+    queryFn: () => api.vms.list(),
   });
 
   const { data: usersData } = useQuery({
     queryKey: ["users"],
-    queryFn: api.users.list,
+    queryFn: () => api.users.list(),
   });
 
   const { data: templatesData } = useQuery({
     queryKey: ["templates"],
-    queryFn: api.templates.list,
+    queryFn: () => api.templates.list(),
   });
 
   const usersById = useMemo(
