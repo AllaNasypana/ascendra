@@ -1,140 +1,88 @@
 # Ascendra Workspaces Dashboard
 
-A take-home implementation of the Ascendra Workspaces platform — a dashboard for managing developer machines, serving both **developers** and **DevOps admins**.
+## Overview
 
-## Quick Start
+Ascendra Workspaces is a dashboard for managing cloud-based developer machines. It serves two roles:
+
+- **Developer** — engineers who run daily work on their own VMs: start machines, open an IDE, and monitor resource usage.
+- **Admin** — DevOps / DevEx operators who need fleet-wide visibility into utilization, cost, templates, and inefficient or overloaded machines.
+
+## Tech Stack
+
+- Next.js (App Router)
+- TypeScript
+- Tailwind CSS
+- TanStack Query
+- Recharts
+- React Hook Form
+- Zod
+- Next.js Route Handlers (mock API)
+
+## Product Decisions
+
+- **Two distinct experiences** — separate navigation, layout, and visual tone for developers (card-based “My Machines”) vs admins (metrics, tables, governance).
+- **Persona-first information architecture** — developers see only their VMs; admins see the full fleet, inventory, and templates.
+- **Cards for developers, tables for admins** — few machines per developer favor action-oriented cards; admins scan many rows with inline utilization.
+- **Efficiency signals for admins** — idle VMs are highlighted in inventory; fleet overview surfaces idle and hot running machines.
+- **Realistic async behavior** — mock API delays, polling during VM transitions, and toast feedback for lifecycle actions.
+
+## Features
+
+### Developer
+
+- Login and engineer registration
+- **My Machines** — VM cards with status, template, region, and CPU / memory / disk usage
+- **Open in IDE** — external link to a vscode-server-style URL (stub)
+- **Lifecycle controls** — start, stop, and restart with starting / stopping states
+- **VM detail** — 24h CPU and memory charts, template specs, uptime, and metadata
+
+### Admin
+
+- **Fleet overview** — total, running, and stopped VMs; engineer count; avg/peak CPU and memory; hourly, month-to-date, and projected monthly cost; 24h utilization trend chart; idle and hot VM alerts
+- **VM inventory** — searchable, filterable, sortable table of all VMs with owner, template, status, utilization, and cost; idle VMs highlighted; VM detail drill-down (read-only)
+- **Templates** — list, create, and edit templates (name, vCPU, memory, disk, base image, preinstalled tools)
+
+## Running Locally
 
 ```bash
 npm install
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000)
+Open [http://localhost:3000](http://localhost:3000).
 
-### Demo Accounts
+**Demo accounts** (password: `password123`)
 
-| Role      | Email                      | Password   |
-| --------- | -------------------------- | ---------- |
-| Developer | `alex.chen@ascendra.io`    | `password` |
-| Admin     | `taylor.admin@ascendra.io` | `password` |
+| Role      | Email                      |
+| --------- | -------------------------- |
+| Developer | `alex.chen@ascendra.io`    |
+| Admin     | `taylor.admin@ascendra.io` |
 
-## Stack
+## Architecture
 
-- **Next.js 16** (App Router) + TypeScript
-- **Tailwind CSS** + shadcn/ui-style components
-- **TanStack Query** for data fetching & cache invalidation
-- **Recharts** for utilization visualizations
-- **React Hook Form + Zod** for forms
-- **react-toastify** for action feedback
-- **Next.js Route Handlers** as mock API backed by in-memory store
+- **UI layer** — Next.js App Router pages compose feature modules under `src/features/`; shared UI lives in `src/components/`.
+- **API layer** — typed client (`src/lib/api-client.ts`) calls Next.js Route Handlers; no data is hardcoded in components.
+- **Mock backend** — in-memory store (`src/mocks/store.ts`) seeded on startup; simulated network delay on API routes.
+- **TanStack Query** — server state, loading/error/empty handling, and cache invalidation after VM and template mutations.
+- **Feature hooks** — data fetching and transformations live in hooks and helpers (e.g. fleet metrics, VM health, inventory filtering).
+- **URL-driven inventory state** — search, status filter, and column sort are stored in query params (`q`, `status`, `sort`, `order`) for shareable, refresh-safe views.
+- **Auth** — session stored in `localStorage`; role-based route guards redirect engineers and admins to the correct area.
 
-## Project Structure
+## Trade-offs
 
-```
-src/
-├── app/
-│   ├── (auth)/login, registration
-│   ├── (developer)/machines, machines/[id]
-│   ├── (admin)/overview, inventory, templates
-│   └── api/          # Mock REST endpoints
-├── components/       # UI, layout, charts, vm
-├── features/         # Developer & admin feature modules
-├── lib/              # API client, query client, utils
-├── mocks/db.ts       # In-memory data store
-└── types/            # Domain TypeScript interfaces
-```
+- **Mock data only** — fleet trend is synthetic; VM metrics are seeded, not collected from a real telemetry pipeline.
+- **Simplified billing** — cost and utilization apply to running VMs only; month-to-date assumes day 13 of the month; projected monthly = hourly × 24 × 30.
+- **Idle / hot detection** — rule-based thresholds (idle: CPU &lt;5% + inactive &gt;30m; hot: CPU ≥80% or memory ≥85%), surfaced as alerts and inventory highlights rather than a separate distribution chart.
+- **Polling, not WebSockets** — VM lists and details refetch on an interval during `starting` / `stopping` transitions.
+- **Policies not built** — policy records exist in the mock database but have no admin UI.
+- **Local auth** — user ID in `localStorage`; suitable for a demo, not production security.
 
----
+## Future Improvements
 
-## Part A — Product & UX Thinking
-
-### How I Read the Brief
-
-The core tension is **two personas with opposite mental models**:
-
-- **Developers** think in terms of _my workspace_ — start it, connect to IDE, check if it's healthy.
-- **Admins** think in terms of _the fleet_ — cost, utilization, idle waste, template governance.
-
-These shouldn't share the same navigation or visual language. I split them into distinct experiences connected by a role-aware switcher (admins can peek at the developer view).
-
-### Key Decisions
-
-| Decision                                                                    | Rationale                                                                                                                        |
-| --------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| **Separate shells** — light/green developer UI vs dark/indigo admin console | Instant visual context for which "mode" you're in                                                                                |
-| **Card grid for developer VMs, data table for admin inventory**             | Developers have few machines (1–3); cards emphasize actions. Admins scan dozens — tables with inline metrics win                 |
-| **Idle VM highlighting**                                                    | Directly addresses admin need for efficiency; surfaced in inventory + fleet alert banner                                         |
-| **Polling during transitions**                                              | Start/stop/restart are async; refetch every 2s while `starting`/`stopping` gives realistic feedback without WebSocket complexity |
-| **"Open in IDE" as external link stub**                                     | Matches brief's vscode-server pattern; clearly actionable without building an embedded IDE                                       |
-| **Mock API with simulated delays**                                          | Forces real loading/error/empty states; mutations feel async like production                                                     |
-
-### Information Architecture
-
-```
-Login
-├── Developer (engineer role)
-│   └── My Machines → VM Detail (charts, metadata, lifecycle)
-└── Admin (admin role)
-    ├── Fleet Overview (aggregate metrics + charts)
-    ├── VM Inventory (search/filter all VMs)
-    └── Templates (CRUD)
-```
-
-Admins with dual access can switch between Developer View and Admin Console via sidebar.
-
-### Flows Prioritized
-
-1. **Developer: see machines → start → open IDE** — the daily loop
-2. **Developer: VM detail with usage charts** — trust that the machine is working
-3. **Admin: fleet overview at a glance** — health check in <10 seconds
-4. **Admin: inventory with idle detection** — cost optimization
-5. **Admin: template management** — infrastructure governance
-
-### Intentionally Left Out (with more time)
-
-- Policies & quotas UI (data model exists in mock DB)
-- Users & teams management
-- WebSocket real-time updates
-- Per-VM activity logs
-- Dark mode toggle (admin is always dark; developer is light)
-- Deployment URL (run locally; deploy to Vercel is straightforward)
-
----
-
-## Features Implemented
-
-### Developer
-
-- My Machines list with status, template, resource usage
-- Start / Stop / Restart with transition states
-- Open in IDE (external link)
-- VM detail: 24h CPU/memory charts, specs, uptime, metadata
-
-### Admin
-
-- Fleet overview: VM counts, avg/peak utilization, cost metrics
-- Fleet utilization charts (24h trend + per-VM CPU distribution)
-- VM inventory: searchable, filterable, idle highlighting
-- Templates: list, create, edit (React Hook Form + Zod)
-
-### Cross-cutting
-
-- Loading skeletons, empty states, error retry
-- Toast notifications for mutations
-- Typed API client + TanStack Query
-- Responsive layout with semantic markup
-
-## API Endpoints
-
-| Method   | Path                                | Description                |
-| -------- | ----------------------------------- | -------------------------- |
-| POST     | `/api/auth/login`                   | Authenticate               |
-| POST     | `/api/auth/register`                | Register engineer          |
-| GET      | `/api/auth/me?userId=`              | Get current user           |
-| GET      | `/api/vms?ownerId=`                 | List VMs                   |
-| GET      | `/api/vms/:id`                      | Get VM                     |
-| GET      | `/api/vms/:id/metrics`              | VM usage history           |
-| POST     | `/api/vms/:id/start\|stop\|restart` | Lifecycle actions          |
-| GET/POST | `/api/templates`                    | List/create templates      |
-| PATCH    | `/api/templates/:id`                | Update template            |
-| GET      | `/api/fleet`                        | Fleet utilization snapshot |
+- Real authentication (sessions, JWT, or OAuth) and server-side authorization
+- Persistent database and real metrics / billing integrations
+- WebSocket or SSE for live fleet and VM updates
+- Policies and quotas UI (max VMs per developer, idle auto-stop)
+- Users and teams management with per-user utilization
+- Per-VM activity logs and richer fleet distribution visualizations
+- Deployment to a hosted environment with CI/CD

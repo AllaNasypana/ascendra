@@ -1,13 +1,13 @@
 'use client';
 
-import type { FC } from 'react';
+import { Suspense, type FC } from 'react';
 import { Skeleton } from '@/components/ui';
 import { PageHeader, QueryErrorPanel } from '@/components/shared';
 import { useInventory } from './use-inventory';
 import { InventoryFilters } from './inventory-filters';
 import { InventoryTable } from './inventory-table';
 
-export const VmInventory: FC = () => {
+const InventoryContent: FC = () => {
   const {
     isLoading,
     isError,
@@ -58,3 +58,9 @@ export const VmInventory: FC = () => {
     </div>
   );
 };
+
+export const VmInventory: FC = () => (
+  <Suspense fallback={<Skeleton className="h-96 w-full rounded-xl" />}>
+    <InventoryContent />
+  </Suspense>
+);

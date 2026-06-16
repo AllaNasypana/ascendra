@@ -1,4 +1,4 @@
-import type { VM, MetricPoint, FleetUtilization, VMStatus } from '@/types';
+import type { VM, MetricPoint, VMStatus } from '@/types';
 import { EVMStatus } from '@/types';
 import { getStore } from '@/mocks/store';
 import { simulateDelay } from '@/utils/general';
@@ -101,59 +101,4 @@ export const restartVm = async (
   });
 
   return updated ? { vm: updated } : null;
-};
-
-export const computeFleetUtilization = (
-  period: FleetUtilization['period'] = 'real-time',
-): FleetUtilization => {
-  const { users, vms } = getStore();
-  const running = vms.filter((v) => v.status === EVMStatus.RUNNING);
-  const stopped = vms.filter((v) => v.status === EVMStatus.STOPPED);
-  const engineers = users.filter((u) => u.role === 'engineer');
-
-  const avgCpu =
-    running.length > 0 ? running.reduce((s, v) => s + v.cpuUsagePercent, 0) / running.length : 0;
-  const avgMem =
-    running.length > 0 ? running.reduce((s, v) => s + v.memoryUsagePercent, 0) / running.length : 0;
-  const peakCpu = running.length > 0 ? Math.max(...running.map((v) => v.cpuUsagePercent)) : 0;
-  const peakMem = running.length > 0 ? Math.max(...running.map((v) => v.memoryUsagePercent)) : 0;
-  const totalHourlyCost = running.reduce((s, v) => s + v.hourlyCost, 0);
-
-  const now = Date.now();
-  const hoursAgo = (h: number) => new Date(now - h * 3600000).toISOString();
-
-  const utilizationTrend: FleetUtilization['utilizationTrend'] = [];
-  for (let i = 23; i >= 0; i--) {
-    const cpuVariance = Math.sin(i * 0.3) * 12 + 35;
-    const memVariance = Math.sin(i * 0.4) * 10 + 45;
-    utilizationTrend.push({
-      timestamp: hoursAgo(i),
-      cpuPercent: Math.max(0, Math.min(100, cpuVariance)),
-      memoryPercent: Math.max(0, Math.min(100, memVariance)),
-      runningVms: running.length + Math.floor(Math.sin(i) * 1),
-    });
-  }
-
-  return {
-    period,
-    totalVms: vms.length,
-    runningVms: running.length,
-    stoppedVms: stopped.length,
-    totalUsers: engineers.length,
-    avgCpuUtilizationPercent: Math.round(avgCpu * 10) / 10,
-    peakCpuUtilizationPercent: peakCpu,
-    avgMemoryUtilizationPercent: Math.round(avgMem * 10) / 10,
-    peakMemoryUtilizationPercent: peakMem,
-    totalHourlyCost: Math.round(totalHourlyCost * 100) / 100,
-    monthToDateCost: Math.round(totalHourlyCost * 24 * 13 * 100) / 100,
-    projectedMonthlyCost: Math.round(totalHourlyCost * 24 * 30 * 100) / 100,
-    utilizationTrend,
-    vmMetrics: vms.map((v) => ({
-      vmId: v.id,
-      cpuPercent: v.cpuUsagePercent,
-      memoryPercent: v.memoryUsagePercent,
-      diskPercent: v.diskUsagePercent,
-      status: v.status,
-    })),
-  };
 };

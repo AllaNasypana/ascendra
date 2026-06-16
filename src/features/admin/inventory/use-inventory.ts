@@ -1,31 +1,29 @@
 'use client';
 
-import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { api } from '@/lib/api-client';
 import { queryKeys } from '@/lib/query-client';
 import { useTemplates } from '@/hooks/use-templates';
 import { useUsers } from '@/hooks/use-users';
 import { createMapById } from '@/utils/collection';
-import type { VMStatus } from '@/types';
-import {
-  DEFAULT_INVENTORY_SORT,
-  getNextInventorySort,
-  type InventorySortColumn,
-  type InventorySortDirection,
-  type InventorySortState,
-} from './inventory-sorting';
-import { buildInventoryItems } from './inventory-mappers';
+import { buildInventoryItems } from './inventory-filtering';
+import { useInventoryQueryParams } from './use-inventory-query-params';
 
-export type { InventorySortColumn, InventorySortDirection };
-
-const DEFAULT_SEARCH = '';
-const DEFAULT_STATUS_FILTER: VMStatus | 'all' = 'all';
+export type { InventorySortColumn, InventorySortDirection } from './inventory-sorting';
 
 export const useInventory = () => {
-  const [search, setSearch] = useState(DEFAULT_SEARCH);
-  const [statusFilter, setStatusFilter] = useState<VMStatus | 'all'>(DEFAULT_STATUS_FILTER);
-  const [sortState, setSortState] = useState<InventorySortState>(DEFAULT_INVENTORY_SORT);
+  const {
+    search,
+    searchQuery,
+    statusFilter,
+    sortColumn,
+    sortDirection,
+    setSearch,
+    setStatusFilter,
+    toggleSort,
+    resetFilters,
+    hasActiveFilters,
+  } = useInventoryQueryParams();
 
   const { data, isLoading, isError, refetch } = useQuery({
     queryKey: queryKeys.vms.list(),
@@ -41,26 +39,10 @@ export const useInventory = () => {
     data?.vms ?? [],
     usersById,
     templatesById,
-    search,
+    searchQuery,
     statusFilter,
-    sortState,
+    { column: sortColumn, direction: sortDirection },
   );
-
-  const toggleSort = (column: InventorySortColumn) => {
-    setSortState((currentSort) => getNextInventorySort(currentSort, column));
-  };
-
-  const resetFilters = () => {
-    setSearch(DEFAULT_SEARCH);
-    setStatusFilter(DEFAULT_STATUS_FILTER);
-    setSortState(DEFAULT_INVENTORY_SORT);
-  };
-
-  const hasActiveFilters =
-    search !== DEFAULT_SEARCH ||
-    statusFilter !== DEFAULT_STATUS_FILTER ||
-    sortState.column !== DEFAULT_INVENTORY_SORT.column ||
-    sortState.direction !== DEFAULT_INVENTORY_SORT.direction;
 
   return {
     data,
@@ -73,8 +55,8 @@ export const useInventory = () => {
     setSearch,
     statusFilter,
     setStatusFilter,
-    sortColumn: sortState.column,
-    sortDirection: sortState.direction,
+    sortColumn,
+    sortDirection,
     toggleSort,
     resetFilters,
     hasActiveFilters,

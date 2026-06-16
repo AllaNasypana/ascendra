@@ -35,14 +35,14 @@ export const formatUptime = (startedAt: string | null): string => {
   return `${hours}h ${minutes}m`;
 };
 
-export const isIdleVm = (
-  lastActiveAt: string,
-  cpuUsagePercent: number,
-  thresholdMinutes = 30,
-): boolean => {
-  const idleMs = Date.now() - new Date(lastActiveAt).getTime();
-  return idleMs > thresholdMinutes * 60000 && cpuUsagePercent < 5;
-};
+export {
+  isIdleVm,
+  isHotVm,
+  isVmIdle,
+  isVmHot,
+  isRunningVm,
+  summarizeVmHealth,
+} from '@/utils/vm-health';
 
 export const simulateDelay = (ms = 400): Promise<void> =>
   new Promise((resolve) => setTimeout(resolve, ms));

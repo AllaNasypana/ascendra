@@ -7,3 +7,5 @@ export * from '@/utils/theme';
 export * from '@/utils/collection';
 export * from '@/utils/errors';
 export * from '@/utils/charts';
+export * from '@/utils/fleet-metrics';
+export * from '@/utils/vm-health';

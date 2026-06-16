@@ -1,10 +1,8 @@
 'use client';
 
 import type { FC } from 'react';
-import Link from 'next/link';
-import { FiArrowLeft } from 'react-icons/fi';
 import { UtilizationChart } from '@/components/charts';
-import { PreinstalledTools } from '@/components/shared';
+import { PreinstalledTools, BackButton } from '@/components/shared';
 import { Badge, Card, CardContent, CardHeader, CardTitle, Skeleton } from '@/components/ui';
 import { VmActionButtons } from '@/components/vm/vm-action-buttons';
 import { useVmActions } from '@/features/developer/vm-detail/use-vm-actions';
@@ -36,9 +34,7 @@ export const VmDetail: FC<VmDetailProps> = ({ vmId, isAdmin = false }) => {
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-4">
-        <Link href="./" className="text-muted-foreground hover:text-foreground">
-          <FiArrowLeft className="h-5 w-5" />
-        </Link>
+        <BackButton />
         <div className="flex-1">
           <div className="flex items-center gap-3">
             <h1 className="text-2xl font-bold">{vm.name}</h1>

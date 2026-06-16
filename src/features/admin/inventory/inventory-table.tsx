@@ -6,8 +6,7 @@ import { Badge } from '@/components/ui';
 import { ROUTES } from '@/constants';
 import type { InventoryItem } from '@/types/inventory';
 import type { VMStatus } from '@/types';
-import { EVMStatus } from '@/types';
-import { cn, formatCurrency, isIdleVm } from '@/utils';
+import { cn, formatCurrency, isVmIdle } from '@/utils';
 import type { InventorySortColumn, InventorySortDirection } from './inventory-sorting';
 import { SortableHeader } from './sortable-header';
 import { MetricCell } from './metric-cell';
@@ -72,8 +71,7 @@ export const InventoryTable: FC<InventoryTableProps> = ({
           </tr>
         ) : (
           items.map(({ vm, owner, template }) => {
-            const isIdle =
-              vm.status === EVMStatus.RUNNING && isIdleVm(vm.lastActiveAt, vm.cpuUsagePercent);
+            const isIdle = isVmIdle(vm);
 
             return (
               <tr key={vm.id} className={cn(isIdle && 'alert-idle-row')}>
