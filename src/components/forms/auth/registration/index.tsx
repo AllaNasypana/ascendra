@@ -2,7 +2,7 @@
 
 import { TextField, PasswordField, SelectField } from '@/components/forms/form-fields';
 import { Button } from '@/components/ui';
-import { useRegistrationForm } from './useRegistrationForm';
+import { useRegistrationForm } from './use-registration-form';
 import { ERole } from '@/types';
 
 export const RegistrationForm = () => {

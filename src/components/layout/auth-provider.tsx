@@ -1,36 +1,20 @@
 'use client';
 
 import type { ReactNode } from 'react';
-import { createContext,  useEffect, useMemo, useState } from 'react';
+import { createContext, useEffect, useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 import type { PublicUser } from '@/types';
+import type { AuthContextValue, RegisterPayload } from '@/types/auth';
 import { api, authStorage } from '@/lib/api-client';
 import { queryKeys } from '@/lib/query-client';
 import { useCurrentUser } from '@/hooks/use-current-user';
-
-interface RegisterPayload {
-  name: string;
-  email: string;
-  password: string;
-  role: PublicUser['role'];
-}
-
-export interface AuthContextValue {
-  user: PublicUser | null;
-  isLoading: boolean;
-  login: (email: string, password: string) => Promise<PublicUser | null>;
-  register: (payload: RegisterPayload) => Promise<PublicUser | null>;
-  logout: () => void;
-  isLoginPending: boolean;
-  isRegisterPending: boolean;
-}
+import { getErrorMessage } from '@/utils/errors';
 
 export const AuthContext = createContext<AuthContextValue | null>(null);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [sessionUser, setSessionUser] = useState<PublicUser | null>(null);
-
   const queryClient = useQueryClient();
   const currentUser = useCurrentUser();
 
@@ -74,16 +58,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const login = async (email: string, password: string) => {
     try {
       const { user } = await loginMutation.mutateAsync({ email, password });
-
       setAuthUser(user);
-
       return user;
     } catch (error) {
-      const message = error instanceof Error ? error.message : 'Login failed';
-
       clearAuthUser();
-      toast.error(message);
-
+      toast.error(getErrorMessage(error, 'Login failed'));
       return null;
     }
   };
@@ -91,16 +70,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const register = async (payload: RegisterPayload) => {
     try {
       const { user } = await registerMutation.mutateAsync(payload);
-
       setAuthUser(user);
-      queryClient.invalidateQueries({ queryKey: queryKeys.users.list });
-
+      queryClient.invalidateQueries({ queryKey: queryKeys.users.all });
       return user;
     } catch (error) {
-      const message = error instanceof Error ? error.message : 'Registration failed';
-
-      toast.error(message);
-
+      toast.error(getErrorMessage(error, 'Registration failed'));
       return null;
     }
   };
@@ -119,18 +93,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     loginMutation.isPending ||
     registerMutation.isPending;
 
-  const value = useMemo<AuthContextValue>(
-    () => ({
-      user,
-      isLoading,
-      login,
-      register,
-      logout,
-      isLoginPending: loginMutation.isPending,
-      isRegisterPending: registerMutation.isPending,
-    }),
-    [user, isLoading, loginMutation.isPending, registerMutation.isPending],
-  );
-  
+  const value: AuthContextValue = {
+    user,
+    isLoading,
+    login,
+    register,
+    logout,
+    isLoginPending: loginMutation.isPending,
+    isRegisterPending: registerMutation.isPending,
+  };
+
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

@@ -1,10 +1,7 @@
 import { NextResponse } from 'next/server';
+import type { RouteParams } from '@/lib/api/route-types';
 import { getTemplateById, simulateDelay, updateTemplate } from '@/utils';
 import type { VMTemplate } from '@/types';
-
-interface RouteParams {
-  params: Promise<{ id: string }>;
-}
 
 export async function GET(_request: Request, { params }: RouteParams) {
   await simulateDelay();

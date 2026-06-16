@@ -3,53 +3,54 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 import { api } from '@/lib/api-client';
+import { queryKeys } from '@/lib/query-client';
+import { getErrorMessage } from '@/utils/errors';
+
+interface VmActionConfig {
+  action: () => Promise<unknown>;
+  pendingMessage: string;
+  successMessage: string;
+}
+
+function useVmActionMutation(
+  queryClient: ReturnType<typeof useQueryClient>,
+  vmId: string,
+  { action, pendingMessage, successMessage }: VmActionConfig,
+) {
+  return useMutation({
+    mutationFn: action,
+    onMutate: () => toast.info(pendingMessage),
+    onSuccess: () => {
+      toast.success(successMessage);
+      queryClient.invalidateQueries({ queryKey: queryKeys.vms.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.vms.detail(vmId) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.fleet.all });
+    },
+    onError: (error: unknown) => {
+      toast.error(getErrorMessage(error, 'Action failed'));
+    },
+  });
+}
 
 export const useVmActions = (vmId: string) => {
   const queryClient = useQueryClient();
 
-  const invalidate = (): void => {
-    queryClient.invalidateQueries({ queryKey: ['vms'] });
-    queryClient.invalidateQueries({ queryKey: ['vm', vmId] });
-    queryClient.invalidateQueries({ queryKey: ['fleet'] });
-  };
-
-  const start = useMutation({
-    mutationFn: () => api.vms.start(vmId),
-    onMutate: () => toast.info('Starting VM…'),
-    onSuccess: () => {
-      toast.success('VM started');
-      invalidate();
-    },
-    onError: (err: unknown) => {
-      const message = err instanceof Error ? err.message : 'Action failed';
-      toast.error(message);
-    },
+  const start = useVmActionMutation(queryClient, vmId, {
+    action: () => api.vms.start(vmId),
+    pendingMessage: 'Starting VM…',
+    successMessage: 'VM started',
   });
 
-  const stop = useMutation({
-    mutationFn: () => api.vms.stop(vmId),
-    onMutate: () => toast.info('Stopping VM…'),
-    onSuccess: () => {
-      toast.success('VM stopped');
-      invalidate();
-    },
-    onError: (err: unknown) => {
-      const message = err instanceof Error ? err.message : 'Action failed';
-      toast.error(message);
-    },
+  const stop = useVmActionMutation(queryClient, vmId, {
+    action: () => api.vms.stop(vmId),
+    pendingMessage: 'Stopping VM…',
+    successMessage: 'VM stopped',
   });
 
-  const restart = useMutation({
-    mutationFn: () => api.vms.restart(vmId),
-    onMutate: () => toast.info('Restarting VM…'),
-    onSuccess: () => {
-      toast.success('VM restarted');
-      invalidate();
-    },
-    onError: (err: unknown) => {
-      const message = err instanceof Error ? err.message : 'Action failed';
-      toast.error(message);
-    },
+  const restart = useVmActionMutation(queryClient, vmId, {
+    action: () => api.vms.restart(vmId),
+    pendingMessage: 'Restarting VM…',
+    successMessage: 'VM restarted',
   });
 
   const isPending = start.isPending || stop.isPending || restart.isPending;

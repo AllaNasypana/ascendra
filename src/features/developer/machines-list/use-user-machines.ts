@@ -1,10 +1,13 @@
 import { useAuth } from '@/hooks/use-auth';
+import { useTemplates } from '@/hooks/use-templates';
+import { getVmListPollingInterval } from '@/hooks/use-vm-polling-interval';
 import { api } from '@/lib/api-client';
-import { isTransitionStatus } from '@/utils';
+import { queryKeys } from '@/lib/query-client';
 import { useQuery } from '@tanstack/react-query';
 
 export const useUserMachines = () => {
   const { user } = useAuth();
+  const { templates } = useTemplates();
 
   const {
     data: vmsData,
@@ -12,24 +15,18 @@ export const useUserMachines = () => {
     isError,
     refetch,
   } = useQuery({
-    queryKey: ['vms', user?.id],
+    queryKey: queryKeys.vms.list({ ownerId: user?.id }),
     queryFn: () => api.vms.list({ ownerId: user!.id }),
-    enabled: !!user,
+    enabled: Boolean(user),
     refetchInterval: (query) => {
-      const vms = query.state.data?.vms ?? [];
-      const hasTransition = vms.some((v) => isTransitionStatus(v.status));
-      return hasTransition ? 2000 : 30000;
+      const statuses = (query.state.data?.vms ?? []).map((vm) => vm.status);
+      return getVmListPollingInterval(statuses);
     },
-  });
-
-  const { data: templatesData } = useQuery({
-    queryKey: ['templates'],
-    queryFn: () => api.templates.list(),
   });
 
   return {
     vms: vmsData?.vms ?? [],
-    templates: templatesData?.templates ?? [],
+    templates,
     isLoading,
     isError,
     refetch,

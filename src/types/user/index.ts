@@ -14,12 +14,3 @@ export interface User {
 }
 
 export type PublicUser = Omit<User, 'passwordHash'>;
-
-export interface UserSummary {
-  id: string;
-  name: string;
-  email: string;
-  vmCount: number;
-  runningVmCount: number;
-  totalHourlyCost: number;
-}

@@ -2,13 +2,14 @@
 
 import type { FC } from 'react';
 import Link from 'next/link';
-import { FiArrowLeft, FiExternalLink, FiPlay, FiSquare, FiRefreshCw } from 'react-icons/fi';
+import { FiArrowLeft } from 'react-icons/fi';
 import { UtilizationChart } from '@/components/charts';
-import { Badge, Button, Card, CardContent, CardHeader, CardTitle, Skeleton } from '@/components/ui';
+import { PreinstalledTools } from '@/components/shared';
+import { Badge, Card, CardContent, CardHeader, CardTitle, Skeleton } from '@/components/ui';
+import { VmActionButtons } from '@/components/vm/vm-action-buttons';
 import { useVmActions } from '@/features/developer/vm-detail/use-vm-actions';
-import { cn, formatCurrency, formatRelativeTime, formatUptime } from '@/utils';
-import { EVMStatus } from '@/types';
 import { useVm } from '@/features/developer/vm-detail/use-vm';
+import { formatCurrency, formatRelativeTime, formatUptime } from '@/utils';
 
 interface VmDetailProps {
   vmId: string;
@@ -17,7 +18,6 @@ interface VmDetailProps {
 
 export const VmDetail: FC<VmDetailProps> = ({ vmId, isAdmin = false }) => {
   const actions = useVmActions(vmId);
-
   const { vm, template, chartData, isTransitioning, metricsLoading, vmLoading } = useVm(vmId);
 
   if (vmLoading) {
@@ -51,36 +51,13 @@ export const VmDetail: FC<VmDetailProps> = ({ vmId, isAdmin = false }) => {
 
         {!isAdmin && (
           <div className="flex gap-2">
-            {vm.status === EVMStatus.RUNNING && (
-              <>
-                <Button asChild>
-                  <a href={vm.ideUrl} target="_blank" rel="noopener noreferrer">
-                    <FiExternalLink />
-                    Open in IDE
-                  </a>
-                </Button>
-                <Button variant="outline" onClick={actions.stop} disabled={actions.isPending}>
-                  <FiSquare />
-                  Stop
-                </Button>
-                <Button variant="ghost" onClick={actions.restart} disabled={actions.isPending}>
-                  <FiRefreshCw className={cn(actions.isPending && 'animate-spin')} />
-                  Restart
-                </Button>
-              </>
-            )}
-            {vm.status === EVMStatus.STOPPED && (
-              <Button onClick={actions.start} disabled={actions.isPending}>
-                <FiPlay />
-                Start
-              </Button>
-            )}
-            {isTransitioning && (
-              <span className="transition-label text-sm">
-                <FiRefreshCw className="mr-1 h-4 w-4 animate-spin" />
-                {vm.status === EVMStatus.STARTING ? 'Starting…' : 'Stopping…'}
-              </span>
-            )}
+            <VmActionButtons
+              vm={vm}
+              onStart={actions.start}
+              onStop={actions.stop}
+              onRestart={actions.restart}
+              isPending={actions.isPending || isTransitioning}
+            />
           </div>
         )}
       </div>
@@ -175,16 +152,7 @@ export const VmDetail: FC<VmDetailProps> = ({ vmId, isAdmin = false }) => {
               <span>{new Date(vm.createdAt).toLocaleDateString()}</span>
             </div>
             {template?.preinstalledTools && (
-              <div>
-                <span className="text-muted-foreground">Tools</span>
-                <div className="mt-1 flex flex-wrap gap-1">
-                  {template.preinstalledTools.map((tool) => (
-                    <span key={tool} className="rounded bg-muted px-2 py-0.5 text-xs">
-                      {tool}
-                    </span>
-                  ))}
-                </div>
-              </div>
+              <PreinstalledTools tools={template.preinstalledTools} />
             )}
           </CardContent>
         </Card>

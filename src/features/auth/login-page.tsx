@@ -1,14 +1,14 @@
 'use client';
 
 import { useEffect } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { LoginForm } from '@/components/forms';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui';
 import { DEMO_PASSWORD } from '@/constants/auth';
 import { ROUTES } from '@/constants';
-import { ERole } from '@/types';
 import { useAuth } from '@/hooks';
-import Link from 'next/link';
+import { getRoleRedirectPath } from '@/utils';
 
 export const LoginPageView = () => {
   const { user, isLoading } = useAuth();
@@ -16,7 +16,7 @@ export const LoginPageView = () => {
 
   useEffect(() => {
     if (isLoading || !user) return;
-    router.replace(user.role === ERole.ADMIN ? ROUTES.overview : ROUTES.machines);
+    router.replace(getRoleRedirectPath(user.role));
   }, [user, isLoading, router]);
 
   if (isLoading || user) return null;
@@ -41,7 +41,7 @@ export const LoginPageView = () => {
 
         <p className="mt-4 text-center text-sm text-muted-foreground">
           No account?{' '}
-          <Link href="/registration" className="text-primary underline underline-offset-2">
+          <Link href={ROUTES.registration} className="text-primary underline underline-offset-2">
             Register
           </Link>
         </p>

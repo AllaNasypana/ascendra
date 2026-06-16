@@ -1,49 +1,26 @@
 'use client';
 
-import { useCallback, useMemo, useState } from 'react';
+import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { api } from '@/lib/api-client';
-import type { PublicUser, VM, VMStatus, VMTemplate } from '@/types';
+import { queryKeys } from '@/lib/query-client';
+import { useTemplates } from '@/hooks/use-templates';
+import { useUsers } from '@/hooks/use-users';
+import { createMapById } from '@/utils/collection';
+import type { VMStatus } from '@/types';
 import {
   DEFAULT_INVENTORY_SORT,
   getNextInventorySort,
-  sortInventoryItems,
   type InventorySortColumn,
   type InventorySortDirection,
   type InventorySortState,
 } from './inventory-sorting';
-export type { InventorySortColumn, InventorySortDirection };
+import { buildInventoryItems } from './inventory-mappers';
 
-interface InventoryItem {
-  vm: VM;
-  owner?: PublicUser;
-  template?: VMTemplate;
-}
+export type { InventorySortColumn, InventorySortDirection };
 
 const DEFAULT_SEARCH = '';
 const DEFAULT_STATUS_FILTER: VMStatus | 'all' = 'all';
-
-const createMapById = <T extends { id: string }>(items: T[] = []) => {
-  return new Map(items.map((item) => [item.id, item]));
-};
-
-const normalizeSearch = (value: string) => {
-  return value.trim().toLowerCase();
-};
-
-const matchesSearch = (vm: VM, owner: PublicUser | undefined, search: string) => {
-  if (!search) return true;
-
-  return (
-    vm.name.toLowerCase().includes(search) ||
-    owner?.name.toLowerCase().includes(search) ||
-    owner?.email.toLowerCase().includes(search)
-  );
-};
-
-const matchesStatus = (vm: VM, status: VMStatus | 'all') => {
-  return status === 'all' || vm.status === status;
-};
 
 export const useInventory = () => {
   const [search, setSearch] = useState(DEFAULT_SEARCH);
@@ -51,52 +28,33 @@ export const useInventory = () => {
   const [sortState, setSortState] = useState<InventorySortState>(DEFAULT_INVENTORY_SORT);
 
   const { data, isLoading, isError, refetch } = useQuery({
-    queryKey: ['vms'],
+    queryKey: queryKeys.vms.list(),
     queryFn: () => api.vms.list(),
   });
 
-  const { data: usersData } = useQuery({
-    queryKey: ['users'],
-    queryFn: () => api.users.list(),
-  });
+  const { data: usersData } = useUsers();
+  const { templatesById } = useTemplates();
 
-  const { data: templatesData } = useQuery({
-    queryKey: ['templates'],
-    queryFn: () => api.templates.list(),
-  });
+  const usersById = createMapById(usersData?.users ?? []);
 
-  const usersById = useMemo(() => createMapById(usersData?.users ?? []), [usersData?.users]);
-
-  const templatesById = useMemo(
-    () => createMapById(templatesData?.templates ?? []),
-    [templatesData?.templates],
+  const inventoryItems = buildInventoryItems(
+    data?.vms ?? [],
+    usersById,
+    templatesById,
+    search,
+    statusFilter,
+    sortState,
   );
 
-  const inventoryItems = useMemo(() => {
-    const normalizedSearch = normalizeSearch(search);
-
-    const items: InventoryItem[] = (data?.vms ?? [])
-      .map((vm) => ({
-        vm,
-        owner: usersById.get(vm.ownerId),
-        template: templatesById.get(vm.templateId),
-      }))
-      .filter(({ vm, owner }) => {
-        return matchesSearch(vm, owner, normalizedSearch) && matchesStatus(vm, statusFilter);
-      });
-
-    return sortInventoryItems(items, sortState);
-  }, [data?.vms, usersById, templatesById, search, statusFilter, sortState]);
-
-  const toggleSort = useCallback((column: InventorySortColumn) => {
+  const toggleSort = (column: InventorySortColumn) => {
     setSortState((currentSort) => getNextInventorySort(currentSort, column));
-  }, []);
+  };
 
-  const resetFilters = useCallback(() => {
+  const resetFilters = () => {
     setSearch(DEFAULT_SEARCH);
     setStatusFilter(DEFAULT_STATUS_FILTER);
     setSortState(DEFAULT_INVENTORY_SORT);
-  }, []);
+  };
 
   const hasActiveFilters =
     search !== DEFAULT_SEARCH ||
@@ -109,19 +67,15 @@ export const useInventory = () => {
     isLoading,
     isError,
     refetch,
-
     inventoryItems,
-
+    totalVms: data?.vms.length ?? 0,
     search,
     setSearch,
-
     statusFilter,
     setStatusFilter,
-
     sortColumn: sortState.column,
     sortDirection: sortState.direction,
     toggleSort,
-
     resetFilters,
     hasActiveFilters,
   };

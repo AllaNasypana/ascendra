@@ -9,7 +9,7 @@ import { Button } from '@/components/ui';
 import { useAuth } from '@/hooks';
 import type { UserRole } from '@/types';
 import { ERole } from '@/types';
-import { Sidebar } from './Sidebar';
+import { Sidebar } from './sidebar';
 import { ROUTES } from '@/constants';
 interface AppShellProps {
   children: ReactNode;
@@ -75,9 +75,7 @@ export const AppShell: FC<AppShellProps> = ({ children, variant }) => {
           >
             {mobileOpen ? <FiX aria-hidden /> : <FiMenu aria-hidden />}
           </Button>
-          <span className="text-sm font-semibold">
-            {shellTitle}
-          </span>
+          <span className="text-sm font-semibold">{shellTitle}</span>
         </header>
 
         <div className="app-shell-content">{children}</div>

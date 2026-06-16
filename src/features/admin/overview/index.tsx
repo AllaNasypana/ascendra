@@ -3,9 +3,9 @@
 import type { FC } from 'react';
 import { UtilizationChart } from '@/components/charts';
 import { MetricCard } from '@/components/metrics';
+import { PageHeader, QueryErrorPanel } from '@/components/shared';
 import { Card, CardContent, CardHeader, CardTitle, Skeleton } from '@/components/ui';
 import { formatCurrency, formatPercent } from '@/utils';
-
 import { useOverview } from './use-overview';
 
 export const FleetOverview: FC = () => {
@@ -15,8 +15,8 @@ export const FleetOverview: FC = () => {
     return (
       <div className="space-y-6">
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {Array.from({ length: 4 }).map((_, i) => (
-            <Skeleton key={i} className="h-28 rounded-xl" />
+          {Array.from({ length: 4 }).map((_, index) => (
+            <Skeleton key={index} className="h-28 rounded-xl" />
           ))}
         </div>
         <Skeleton className="h-80 rounded-xl" />
@@ -25,24 +25,15 @@ export const FleetOverview: FC = () => {
   }
 
   if (isError || !fleet) {
-    return (
-      <div className="state-panel">
-        <p className="text-muted-foreground">Failed to load fleet data.</p>
-        <button type="button" onClick={() => refetch()} className="state-panel-action">
-          Retry
-        </button>
-      </div>
-    );
+    return <QueryErrorPanel message="Failed to load fleet data." onRetry={() => refetch()} />;
   }
 
   return (
     <div className="space-y-6">
-      <header className="page-header">
-        <h1 className="page-title">Fleet Overview</h1>
-        <p className="page-description">
-          Infrastructure health and utilization across {fleet.totalUsers} developers
-        </p>
-      </header>
+      <PageHeader
+        title="Fleet Overview"
+        description={`Infrastructure health and utilization across ${fleet.totalUsers} developers`}
+      />
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <MetricCard
@@ -74,16 +65,14 @@ export const FleetOverview: FC = () => {
         </div>
       )}
 
-      <div className="flex flex-col gap-4">
-        <Card>
-          <CardHeader>
-            <CardTitle>Fleet Utilization (24h)</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <UtilizationChart data={chartData ?? []} />
-          </CardContent>
-        </Card>
-      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>Fleet Utilization (24h)</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <UtilizationChart data={chartData ?? []} />
+        </CardContent>
+      </Card>
     </div>
   );
 };

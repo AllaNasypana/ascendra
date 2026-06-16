@@ -4,10 +4,9 @@ import { useQuery } from '@tanstack/react-query';
 import { api } from '@/lib/api-client';
 import { queryKeys } from '@/lib/query-client';
 
-export const useUsers = () => {
+export function useUsers() {
   return useQuery({
     queryKey: queryKeys.users.list,
-    queryFn: api.users.list,
-    select: (data) => data.users,
+    queryFn: () => api.users.list(),
   });
-};
+}

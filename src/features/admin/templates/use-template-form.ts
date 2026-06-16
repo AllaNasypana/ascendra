@@ -3,8 +3,10 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 import { api } from '@/lib/api-client';
+import { queryKeys } from '@/lib/query-client';
 import type { VMTemplate } from '@/types';
 import type { TemplateFormValues } from '@/lib/schemas';
+import { getErrorMessage } from '@/utils/errors';
 import { toTemplatePayload } from './template-mappers';
 
 interface UseTemplateFormParams {
@@ -16,14 +18,18 @@ export const useTemplateForm = ({ template, onSuccess }: UseTemplateFormParams) 
   const queryClient = useQueryClient();
   const isEdit = Boolean(template);
 
+  const invalidateTemplates = () => {
+    queryClient.invalidateQueries({ queryKey: queryKeys.templates.all });
+  };
+
   const createMutation = useMutation({
     mutationFn: (data: TemplateFormValues) => api.templates.create(toTemplatePayload(data)),
     onSuccess: () => {
       toast.success('Template created');
-      queryClient.invalidateQueries({ queryKey: ['templates'] });
+      invalidateTemplates();
       onSuccess();
     },
-    onError: (error: Error) => toast.error(error.message),
+    onError: (error: unknown) => toast.error(getErrorMessage(error, 'Failed to create template')),
   });
 
   const updateMutation = useMutation({
@@ -36,10 +42,10 @@ export const useTemplateForm = ({ template, onSuccess }: UseTemplateFormParams) 
     },
     onSuccess: () => {
       toast.success('Template updated');
-      queryClient.invalidateQueries({ queryKey: ['templates'] });
+      invalidateTemplates();
       onSuccess();
     },
-    onError: (error: Error) => toast.error(error.message),
+    onError: (error: unknown) => toast.error(getErrorMessage(error, 'Failed to update template')),
   });
 
   const submitTemplate = (data: TemplateFormValues) => {

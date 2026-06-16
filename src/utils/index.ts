@@ -4,3 +4,6 @@ export * from '@/utils/user';
 export * from '@/utils/template';
 export * from '@/utils/vm';
 export * from '@/utils/theme';
+export * from '@/utils/collection';
+export * from '@/utils/errors';
+export * from '@/utils/charts';

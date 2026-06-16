@@ -2,7 +2,7 @@
 
 import { TextField, PasswordField } from '@/components/forms/form-fields';
 import { Button } from '@/components/ui';
-import { useLoginForm } from './useLogin';
+import { useLoginForm } from './use-login-form';
 
 export const LoginForm = () => {
   const { control, handleSubmit, errors, isSubmitting, onSubmit } = useLoginForm();

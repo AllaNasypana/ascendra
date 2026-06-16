@@ -1,9 +1,6 @@
 import { NextResponse } from 'next/server';
+import type { RouteParams } from '@/lib/api/route-types';
 import { getMetricPointsForVm, getVmById, simulateDelay } from '@/utils';
-
-interface RouteParams {
-  params: Promise<{ id: string }>;
-}
 
 export async function GET(_request: Request, { params }: RouteParams) {
   await simulateDelay();

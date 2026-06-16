@@ -12,12 +12,7 @@ import {
   Legend,
 } from 'recharts';
 
-interface ChartDataPoint {
-  label: string;
-  cpu?: number;
-  memory?: number;
-  runningVms?: number;
-}
+import type { ChartDataPoint } from '@/types/charts';
 
 interface UtilizationChartProps {
   data: ChartDataPoint[];

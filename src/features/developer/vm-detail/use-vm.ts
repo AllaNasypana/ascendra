@@ -1,36 +1,28 @@
+import { mapMetricsToChartData } from '@/utils/charts';
 import { isTransitionStatus } from '@/utils';
+import { getVmPollingInterval } from '@/hooks/use-vm-polling-interval';
+import { useTemplates } from '@/hooks/use-templates';
 import { useQuery } from '@tanstack/react-query';
 import { api } from '@/lib/api-client';
+import { queryKeys } from '@/lib/query-client';
 
 export const useVm = (vmId: string) => {
   const { data: vmData, isLoading: vmLoading } = useQuery({
-    queryKey: ['vm', vmId],
+    queryKey: queryKeys.vms.detail(vmId),
     queryFn: () => api.vms.get(vmId),
-    refetchInterval: (query) => {
-      const status = query.state.data?.vm.status;
-      return status && isTransitionStatus(status) ? 2000 : 30000;
-    },
+    refetchInterval: (query) => getVmPollingInterval(query.state.data?.vm.status),
   });
 
   const { data: metricsData, isLoading: metricsLoading } = useQuery({
-    queryKey: ['vm-metrics', vmId],
+    queryKey: queryKeys.vms.metrics(vmId),
     queryFn: () => api.vms.metrics(vmId),
   });
 
-  const { data: templatesData } = useQuery({
-    queryKey: ['templates'],
-    queryFn: () => api.templates.list(),
-  });
+  const { getTemplate } = useTemplates();
 
   const vm = vmData?.vm;
-
-  const template = templatesData?.templates.find((t) => t.id === vm?.templateId);
-  const chartData = (metricsData?.metrics ?? []).map((m) => ({
-    label: new Date(m.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-    cpu: Math.round(m.cpuPercent),
-    memory: Math.round(m.memoryPercent),
-  }));
-
+  const template = vm ? getTemplate(vm.templateId) : undefined;
+  const chartData = mapMetricsToChartData(metricsData?.metrics ?? []);
   const isTransitioning = isTransitionStatus(vm?.status);
 
   return {

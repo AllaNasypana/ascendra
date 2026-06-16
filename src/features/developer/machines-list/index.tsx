@@ -2,6 +2,7 @@
 
 import type { FC } from 'react';
 import { Skeleton } from '@/components/ui';
+import { QueryErrorPanel } from '@/components/shared';
 import { VmCardActions } from '@/features/developer/machines-list/vm-card-actions';
 import { useUserMachines } from '@/features/developer/machines-list/use-user-machines';
 
@@ -11,22 +12,15 @@ export const MachinesList: FC = () => {
   if (isLoading) {
     return (
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {Array.from({ length: 3 }).map((_, i) => (
-          <Skeleton key={i} className="h-64 rounded-xl" />
+        {Array.from({ length: 3 }).map((_, index) => (
+          <Skeleton key={index} className="h-64 rounded-xl" />
         ))}
       </div>
     );
   }
 
   if (isError) {
-    return (
-      <div className="state-panel">
-        <p className="text-muted-foreground">Failed to load machines.</p>
-        <button type="button" onClick={() => refetch()} className="state-panel-action">
-          Retry
-        </button>
-      </div>
-    );
+    return <QueryErrorPanel message="Failed to load machines." onRetry={() => refetch()} />;
   }
 
   if (vms.length === 0) {

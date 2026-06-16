@@ -1,10 +1,7 @@
 import { NextResponse } from 'next/server';
+import type { RouteParams } from '@/lib/api/route-types';
 import { EVMStatus } from '@/types';
 import { transitionVm } from '@/utils';
-
-interface RouteParams {
-  params: Promise<{ id: string }>;
-}
 
 export async function POST(_request: Request, { params }: RouteParams) {
   const { id } = await params;

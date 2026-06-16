@@ -2,10 +2,10 @@
 
 import type { FC } from 'react';
 import { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
 import { FiPlus } from 'react-icons/fi';
 import { Button } from '@/components/ui';
-import { api } from '@/lib/api-client';
+import { QueryErrorPanel } from '@/components/shared';
+import { useTemplates } from '@/hooks/use-templates';
 import type { VMTemplate } from '@/types';
 import { TemplateCard } from '@/components/template/template-card';
 import { TemplateFormDialog } from './template-form-dialog';
@@ -15,10 +15,7 @@ export const TemplatesManager: FC = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingTemplate, setEditingTemplate] = useState<VMTemplate>();
 
-  const { data, isLoading, isError, refetch } = useQuery({
-    queryKey: ['templates'],
-    queryFn: api.templates.list,
-  });
+  const { templates, isLoading, isError, refetch } = useTemplates();
 
   const openCreateDialog = () => {
     setEditingTemplate(undefined);
@@ -35,18 +32,8 @@ export const TemplatesManager: FC = () => {
   }
 
   if (isError) {
-    return (
-      <div className="state-panel">
-        <p className="text-muted-foreground">Failed to load templates.</p>
-
-        <Button type="button" onClick={() => refetch()} className="state-panel-action">
-          Retry
-        </Button>
-      </div>
-    );
+    return <QueryErrorPanel message="Failed to load templates." onRetry={() => refetch()} />;
   }
-
-  const templates = data?.templates ?? [];
 
   return (
     <div className="space-y-6">
@@ -55,7 +42,6 @@ export const TemplatesManager: FC = () => {
           <h1 className="page-title">VM Templates</h1>
           <p className="page-description">{templates.length} templates configured</p>
         </div>
-
         <Button onClick={openCreateDialog}>
           <FiPlus aria-hidden />
           New Template

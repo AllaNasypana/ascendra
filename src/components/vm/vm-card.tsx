@@ -2,8 +2,8 @@
 
 import type { FC } from 'react';
 import Link from 'next/link';
-import { FiExternalLink, FiPlay, FiSquare, FiRefreshCw } from 'react-icons/fi';
-import { Badge, Button, Card, CardContent, CardHeader, CardTitle } from '@/components/ui';
+import { Badge, Card, CardContent, CardHeader, CardTitle } from '@/components/ui';
+import { VmActionButtons } from '@/components/vm/vm-action-buttons';
 import { cn, formatCurrency, formatRelativeTime, isTransitionStatus } from '@/utils';
 import { EVMStatus, type VM, type VMTemplate } from '@/types';
 import { ResourceBar } from './resource-bar';
@@ -26,7 +26,6 @@ export const VmCard: FC<VmCardProps> = ({
   isActionPending,
 }) => {
   const isTransitioning = isTransitionStatus(vm.status);
-  const canConnect = vm.status === EVMStatus.RUNNING;
   const detailHref = `/machines/${vm.id}`;
 
   return (
@@ -36,12 +35,11 @@ export const VmCard: FC<VmCardProps> = ({
         isTransitioning && 'opacity-80',
       )}
     >
-      <CardHeader className="relative z-10 flex flex-row items-start justify-between space-y-0 pb-3 ">
+      <CardHeader className="relative z-10 flex flex-row items-start justify-between space-y-0 pb-3">
         <div>
-          <Link href={detailHref} className="flex hover:underline py-2">
+          <Link href={detailHref} className="flex py-2 hover:underline">
             <CardTitle className="text-base group-hover:underline">{vm.name}</CardTitle>
           </Link>
-
           <p className="mt-1 text-xs text-muted-foreground">
             {template?.name ?? vm.templateId} · {vm.region}
           </p>
@@ -63,38 +61,14 @@ export const VmCard: FC<VmCardProps> = ({
         )}
 
         <div className="relative z-20 flex flex-wrap gap-2 pointer-events-auto">
-          {canConnect && (
-            <Button asChild size="sm" variant="default">
-              <a href={vm.ideUrl} target="_blank" rel="noopener noreferrer">
-                <FiExternalLink />
-                Open in IDE
-              </a>
-            </Button>
-          )}
-          {vm.status === EVMStatus.STOPPED && onStart && (
-            <Button size="sm" variant="outline" onClick={onStart} disabled={isActionPending}>
-              <FiPlay />
-              Start
-            </Button>
-          )}
-          {vm.status === EVMStatus.RUNNING && onStop && (
-            <Button size="sm" variant="outline" onClick={onStop} disabled={isActionPending}>
-              <FiSquare />
-              Stop
-            </Button>
-          )}
-          {vm.status === EVMStatus.RUNNING && onRestart && (
-            <Button size="sm" variant="ghost" onClick={onRestart} disabled={isActionPending}>
-              <FiRefreshCw className={cn(isActionPending && 'animate-spin')} />
-              Restart
-            </Button>
-          )}
-          {isTransitioning && (
-            <span className="transition-label">
-              <FiRefreshCw className="mr-1 h-3 w-3 animate-spin" />
-              {vm.status === EVMStatus.STARTING ? 'Starting…' : 'Stopping…'}
-            </span>
-          )}
+          <VmActionButtons
+            vm={vm}
+            onStart={onStart}
+            onStop={onStop}
+            onRestart={onRestart}
+            isPending={isActionPending}
+            size="sm"
+          />
         </div>
 
         <p className="pointer-events-none text-xs text-muted-foreground">
